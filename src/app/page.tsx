@@ -8,6 +8,7 @@ export default function Home() {
     <Container>
       <Link href="/DashboardProduct">
         <Title>Cadastrar Produtos</Title>
+        <h1>Olá</h1>
       </Link>
     </Container>
   );
