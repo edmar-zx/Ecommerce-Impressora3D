@@ -1,13 +1,13 @@
 'use client';
 import { styled, createGlobalStyle } from "styled-components";
 
-
-const GlobalStyle = createGlobalStyle`
-  * {
+/*   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+  } */
+const GlobalStyle = createGlobalStyle`
+
   body {
     font-family: Arial, sans-serif;
     
@@ -32,7 +32,6 @@ export const Text = styled.span`
   text-align: center;
   margin-bottom: 10px;
   
-
 `;
 
 export default GlobalStyle;

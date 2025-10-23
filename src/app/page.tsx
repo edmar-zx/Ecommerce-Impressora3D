@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <Container>
-      <Link href="/DashboardProduct">
+      <Link href="/admin/DashboardProduct">
         <Title>Cadastrar Produtos</Title>
         <h1>Olá</h1>
       </Link>

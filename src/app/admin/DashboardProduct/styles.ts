@@ -4,6 +4,7 @@ import { FaPlus } from "react-icons/fa";
 export const Container = styled.div`
   height: 100vh;
   margin: 30px 50px;
+ 
 `;
 
 export const Title = styled.h1`

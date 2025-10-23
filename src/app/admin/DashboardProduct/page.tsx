@@ -6,9 +6,9 @@ import {
     Toolbar, ProductList, ProductItem, TableHeader, TableText,
     IconButton
 } from './styles';
-import { Cards } from "@/components/Cards";
-import { SearchBox } from "@/components/Searchbox";
-import { ModalProduto } from "@/components/Modal";
+import { Cards } from "@/components/StylesComponents/Cards";
+import { SearchBox } from "@/components/StylesComponents/Searchbox";
+import { ModalProduto } from "@/components/StylesComponents/Modal";
 import { Produto } from "@/types/product";
 import { validateProduct } from "@/utils/productValidation";
 

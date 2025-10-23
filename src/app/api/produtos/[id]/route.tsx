@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getProdutosCollection } from "../mongodb";
 import { ObjectId } from "mongodb";
 
-export async function GET(req: Request, { params }: { params: { id: string } }
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await context.params;
 
         if (!ObjectId.isValid(id)) {
             return NextResponse.json({ error: "ID inválido" }, { status: 400 });
