@@ -1,8 +1,8 @@
 import { Produto } from "@/types/product";
 
 export function validateProduct(produto: Produto) {
-    const isEmpty = (value: any) => value === "" || value === null || value === undefined;
 
+    // Adicionar validao com zod
     // Verifica campos obrigatórios
     if (
         !produto.nome ||
@@ -16,8 +16,8 @@ export function validateProduct(produto: Produto) {
         !produto.dimensoes?.largura ||
         !produto.dimensoes?.profundidade ||
         !produto.preco ||
-        isEmpty(produto.desconto) ||
-        isEmpty(produto.estoque) ||
+        !produto.desconto ||
+        !produto.estoque ||
         !produto.tempoEstimadoProducao
     ) {
         return false;
