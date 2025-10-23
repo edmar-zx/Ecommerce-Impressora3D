@@ -1,42 +1,55 @@
-import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { loginAndRegisterUserSchema } from "@/schemas/adminSchema";
-import { getUsersCollection } from "./mongodb";
+// import { NextResponse } from "next/server";
+// import bcrypt from "bcryptjs";
+// import jwt from "jsonwebtoken";
+// import { getUsersCollection } from "./mongodb";
+// import { loginAndRegisterUserSchema } from "@/schemas/adminSchema";
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
+// const JWT_SECRET = process.env.JWT_SECRET || "seuSegredoSuperSeguro";
 
-    // ✅ Validação com Zod
-    const parsed = loginAndRegisterUserSchema.safeParse(body);
-    if (!parsed.success) {
-      const errors = parsed.error.format();
-      return NextResponse.json({ error: errors }, { status: 400 });
-    }
+// export async function POST(req: Request) {
+//   try {
+//     const body = await req.json();
 
-    const { email, password } = parsed.data;
+//     // ✅ Validação com Zod
+//     const parsed = loginAndRegisterUserSchema.safeParse(body);
+//     if (!parsed.success) {
+//       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+//     }
 
-    const users = await getUsersCollection();
+//     const { email, password } = parsed.data;
+//     const users = await getUsersCollection();
 
-    // 🔍 Busca usuário
-    const user = await users.findOne({ email });
-    if (!user) {
-      return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
-    }
+//     // 🔍 Verifica se o usuário existe
+//     const user = await users.findOne({ email });
+//     if (!user) {
+//       return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
+//     }
 
-    // 🔑 Compara senhas
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
-    }
+//     // 🔐 Verifica senha
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
+//     }
 
-    // 🟢 Sucesso
-    return NextResponse.json({
-      message: "Login bem-sucedido",
-      user: { email: user.email }, // não envia a senha
-    }, { status: 200 });
-  } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
-  }
-}
+//     // 🔑 Gera token JWT
+//     const token = jwt.sign(
+//       { id: user._id, email: user.email },
+//       JWT_SECRET,
+//       { expiresIn: "1h" } // o token expira em 1 hora
+//     );
+
+//     // 🍪 (Opcional) Armazena token em cookie
+//     const response = NextResponse.json({ message: "Login bem-sucedido" });
+//     response.cookies.set("authToken", token, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 60 * 60, // 1 hora
+//       path: "/",
+//     });
+
+//     return response;
+//   } catch (error) {
+//     console.error("Erro no login:", error);
+//     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
+//   }
+// }

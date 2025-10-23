@@ -3,12 +3,25 @@
 import { useForm } from "react-hook-form"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function LoginForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm<formLoginAndRegister>({ resolver: zodResolver(loginAndRegisterUserSchema) })
 
-    const onSubmit = async () => {
+    const onSubmit = async (data: formLoginAndRegister) => {
+        try {
+            const response = await fetch('/api/adminRegister', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
 
+            if (response.ok) alert('Usuário cadastrado com sucesso !!! ')
+        } catch (err) {
+            console.log('Erro ao registrar usuário: ', err)
+            alert('Erro ao registrar usuário')
+        }
     }
 
     return (
@@ -39,10 +52,10 @@ export default function LoginForm() {
                                     placeholder="seu@email.com"
                                     {...register('email')}
                                 />
+                                {errors.email && (
+                                    <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>
+                                )}
                             </div>
-                        {/*     {errors.email && (
-                                <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>
-                            )} */}
                         </div>
 
                         <div>
@@ -62,10 +75,10 @@ export default function LoginForm() {
                                     placeholder="Sua senha"
                                     {...register('password')}
                                 />
+                                {errors.password && (
+                                    <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>
+                                )}
                             </div>
-                         {/*    {errors.password && (
-                                <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>
-                            )} */}
                         </div>
 
                         <div className="flex items-center justify-between">
