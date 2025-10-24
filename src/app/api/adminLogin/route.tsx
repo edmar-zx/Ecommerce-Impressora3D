@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { getUsersCollection } from "./mongodb";
 import { loginAndRegisterUserSchema } from "@/schemas/adminSchema";
 
-const JWT_SECRET = process.env.JWT_SECRET || "seuSegredoSuperSeguro";
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: Request) {
   try {

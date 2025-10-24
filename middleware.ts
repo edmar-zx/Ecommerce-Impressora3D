@@ -6,6 +6,7 @@ const SECRET = process.env.JWT_SECRET!;
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value;
+  console.log("Cookie authToken:", token);
 
   if (!token) {
     return NextResponse.redirect(new URL("/", req.url));
