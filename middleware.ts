@@ -9,14 +9,17 @@ export function middleware(req: NextRequest) {
   console.log("Cookie authToken:", token);
 
   if (!token) {
+    console.log("dentro do if:::;Cookie authToken:", token);
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   try {
     // Verifica se o token é válido
     jwt.verify(token, SECRET);
+    console.log("Passou do jwt verificacao Cookie authToken:", token);
     return NextResponse.next();
   } catch (err) {
+    console.log("catcg error: Cookie authToken:", token);
     return NextResponse.redirect(new URL("/", req.url));
   }
 }
