@@ -15,13 +15,16 @@ export default function LoginForm() {
 
     const router = useRouter();
 
+    // LoginForm - Adicione esta função para debug
     const onSubmit = async (data: formLoginAndRegister) => {
         try {
             const response = await fetch('/api/adminLogin', {
                 method: 'POST',
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(data),
-                credentials: "include"  // necessário para que o navegador aceite o cookie
+                credentials: "include" // Importante para cookies
             });
 
             const result = await response.json();
@@ -31,15 +34,17 @@ export default function LoginForm() {
                 return;
             }
 
+            console.log("✅ Login bem-sucedido, redirecionando...");
             alert('Login realizado com sucesso!');
-            setTimeout(() => router.push('/admin/DashboardProduct'), 100);
+
+            // Força um reload para garantir que o middleware reconheça o cookie
+            window.location.href = '/admin/DashboardProduct';
 
         } catch (err) {
-            console.error('Erro ao fazer login:', err);
+            console.error('❌ Erro ao fazer login:', err);
             alert('Erro ao fazer login, tente novamente.');
         }
     };
-
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
