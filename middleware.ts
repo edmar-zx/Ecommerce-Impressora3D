@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
+import Cookies from "js-cookie";
 
 const SECRET = process.env.JWT_SECRET!;
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("authToken")?.value;
+
+  const token = Cookies.get("authToken")
+
   console.log("Cookie authToken:", token);
 
   if (!token) {
