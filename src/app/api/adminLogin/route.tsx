@@ -1,4 +1,4 @@
-// api/adminLogin/route.tsx
+// api/adminLogin/route.ts
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(req: Request) {
   try {
-    // Verifica se JWT_SECRET está configurado
     if (!JWT_SECRET) {
       console.error("❌ JWT_SECRET não configurado");
       return NextResponse.json(
@@ -19,7 +18,6 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-
     const parsed = loginAndRegisterUserSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
@@ -46,25 +44,26 @@ export async function POST(req: Request) {
       expiresIn: "1h" 
     });
 
-    // Configuração do cookie para produção/desenvolvimento
-    const isProduction = process.env.NODE_ENV === "production";
-    const domain = isProduction ? '.vercel.app' : 'localhost'; // Ajuste para seu domínio
-
+    // **CORREÇÃO CRÍTICA: Configuração do cookie para Vercel**
+    const requestOrigin = req.headers.get('origin');
+    const isVercel = requestOrigin?.includes('.vercel.app');
+    
     const response = NextResponse.json({ 
       message: "Login bem-sucedido",
       user: { id: user._id, email: user.email }
     });
 
+    // **CONFIGURAÇÃO ESPECÍFICA PARA VERCEL**
     response.cookies.set("authToken", token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax", // 'none' para cross-domain na Vercel
-      maxAge: 60 * 60, // 1 hora
+      secure: true, // ✅ SEMPRE true na Vercel
+      sameSite: "none", // ✅ CRÍTICO para cross-domain na Vercel
+      maxAge: 60 * 60,
       path: "/",
-      domain: isProduction ? domain : undefined
+      // ⚠️ NÃO defina 'domain' - deixa o browser gerenciar
     });
 
-    console.log("✅ Cookie configurado com sucesso");
+    console.log("✅ Cookie configurado - Secure:", true, "SameSite: none");
     return response;
 
   } catch (error) {

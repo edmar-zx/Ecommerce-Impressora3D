@@ -16,15 +16,18 @@ export default function LoginForm() {
     const router = useRouter();
 
     // LoginForm - Adicione esta função para debug
+    // LoginForm - Correção crítica
     const onSubmit = async (data: formLoginAndRegister) => {
         try {
+            console.log("🔄 Iniciando login...");
+
             const response = await fetch('/api/adminLogin', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
-                credentials: "include" // Importante para cookies
+                credentials: "include" // ✅ CRÍTICO para cross-origin
             });
 
             const result = await response.json();
@@ -34,10 +37,22 @@ export default function LoginForm() {
                 return;
             }
 
-            console.log("✅ Login bem-sucedido, redirecionando...");
+            console.log("✅ Login API bem-sucedido, verificando cookie...");
+
+            // **AGUARDA um pouco para o cookie ser processado**
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // **VERIFICA se o cookie está presente**
+            const hasCookie = document.cookie.includes('authToken');
+            console.log("🍪 Cookie authToken no cliente:", hasCookie);
+
+            if (!hasCookie) {
+                console.warn("⚠️ Cookie não encontrado no cliente após login");
+            }
+
             alert('Login realizado com sucesso!');
 
-            // Força um reload para garantir que o middleware reconheça o cookie
+            // **REDIRECIONAMENTO FORÇADO - método mais confiável**
             window.location.href = '/admin/DashboardProduct';
 
         } catch (err) {
