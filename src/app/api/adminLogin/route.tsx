@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     response.cookies.set("authToken", token, {
       httpOnly: true,
       secure: true, // ✅ SEMPRE true na Vercel
-      sameSite: "lax", // ✅ CRÍTICO para cross-domain na Vercel
+      sameSite: "strict", // ✅ CRÍTICO para cross-domain na Vercel
       maxAge: 60 * 60,
       path: "/",
       // ⚠️ NÃO defina 'domain' - deixa o browser gerenciar
