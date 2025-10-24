@@ -10,7 +10,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // ✅ Validação com Zod
     const parsed = loginAndRegisterUserSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
@@ -19,13 +18,11 @@ export async function POST(req: Request) {
     const { email, password } = parsed.data;
     const users = await getUsersCollection();
 
-    // 🔍 Verifica se o usuário existe
     const user = await users.findOne({ email });
     if (!user) {
       return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
     }
 
-    // 🔐 Verifica senha
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
@@ -35,15 +32,20 @@ export async function POST(req: Request) {
     const token = jwt.sign(
       { id: user._id, email: user.email },
       JWT_SECRET,
-      { expiresIn: "1h" } // o token expira em 1 hora
+      { expiresIn: "1h" }
     );
 
-    // Retorna token no JSON
-    return NextResponse.json({
-      message: "Login bem-sucedido",
-      token // <--- aqui
+    // 🍪 Define o cookie HttpOnly
+    const response = NextResponse.json({ message: "Login bem-sucedido" });
+    response.cookies.set("authToken", token, {
+      httpOnly: true, // não acessível pelo JS
+      secure: process.env.NODE_ENV === "production", // só HTTPS em prod
+      sameSite: "strict",
+      maxAge: 60 * 60, // 1 hora
+      path: "/",
     });
 
+    return response;
   } catch (error) {
     console.error("Erro no login:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

@@ -1,45 +1,47 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
-import Cookies from "js-cookie"
+import { useForm } from "react-hook-form";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm<formLoginAndRegister>({ resolver: zodResolver(loginAndRegisterUserSchema) })
-    const router = useRouter()
+  const { register, handleSubmit, formState: { errors } } =
+    useForm<formLoginAndRegister>({
+      resolver: zodResolver(loginAndRegisterUserSchema),
+    });
 
-    const onSubmit = async (data: formLoginAndRegister) => {
-        try {
-            const response = await fetch('/api/adminLogin', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
+  const router = useRouter();
 
-            const result = await response.json();
+  const onSubmit = async (data: formLoginAndRegister) => {
+    try {
+      const response = await fetch("/api/adminLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-            if (!response.ok) {
-                alert(result.error || 'Erro ao fazer login');
-                return;
-            }
+      const result = await response.json();
 
-            // Recebe token do backend
-            const token = result.token;
+      if (!response.ok) {
+        alert(result.error || "Erro ao fazer login");
+        return;
+      }
 
-            // Cria cookie no frontend
-            Cookies.set("authToken", token, { path: "/", expires: 1 }); // expira em 1 dia
+      alert("Login realizado com sucesso!");
 
-            alert('Login realizado com sucesso!');
-            router.push('/admin/DashboardProduct');
-        } catch (err) {
-            console.error('Erro ao fazer login:', err);
-            alert('Erro ao fazer login, tente novamente.');
-        }
-    };
+      // aguarda um instante para garantir que o cookie foi salvo
+      setTimeout(() => {
+        router.push("/admin/DashboardProduct");
+      }, 300);
+
+    } catch (err) {
+      console.error("Erro ao fazer login:", err);
+      alert("Erro ao fazer login, tente novamente.");
+    }
+  };
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
