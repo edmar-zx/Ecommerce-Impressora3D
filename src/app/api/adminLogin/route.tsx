@@ -38,16 +38,12 @@ export async function POST(req: Request) {
       { expiresIn: "1h" } // o token expira em 1 hora
     );
 
-    // 🍪 (Opcional) Armazena token em cookie
-    const response = NextResponse.json({ message: "Login bem-sucedido" });
-    response.cookies.set("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60, // 1 hora
-      path: "/",
+    // Retorna token no JSON
+    return NextResponse.json({
+      message: "Login bem-sucedido",
+      token // <--- aqui
     });
 
-    return response;
   } catch (error) {
     console.error("Erro no login:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

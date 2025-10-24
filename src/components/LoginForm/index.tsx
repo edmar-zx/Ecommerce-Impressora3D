@@ -6,6 +6,7 @@ import { Label } from "../ui/label"
 import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
 
 export default function LoginForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<formLoginAndRegister>({ resolver: zodResolver(loginAndRegisterUserSchema) })
@@ -16,27 +17,29 @@ export default function LoginForm() {
             const response = await fetch('/api/adminLogin', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-                credentials: "include"
-            })
+                body: JSON.stringify(data)
+            });
 
-            const result = await response.json()
+            const result = await response.json();
 
             if (!response.ok) {
-                alert(result.error || 'Erro ao fazer login')
-                return
+                alert(result.error || 'Erro ao fazer login');
+                return;
             }
 
-            alert('Login realizado com sucesso!')
+            // Recebe token do backend
+            const token = result.token;
 
-            // 🔄 Redireciona para outra página (ex: dashboard)
-            router.push('/admin/DashboardProduct')
+            // Cria cookie no frontend
+            Cookies.set("authToken", token, { path: "/", expires: 1 }); // expira em 1 dia
 
+            alert('Login realizado com sucesso!');
+            router.push('/admin/DashboardProduct');
         } catch (err) {
-            console.error('Erro ao fazer login:', err)
-            alert('Erro ao fazer login, tente novamente.')
+            console.error('Erro ao fazer login:', err);
+            alert('Erro ao fazer login, tente novamente.');
         }
-    }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
