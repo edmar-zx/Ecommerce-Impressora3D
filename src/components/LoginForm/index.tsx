@@ -8,40 +8,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const { register, handleSubmit, formState: { errors } } =
-    useForm<formLoginAndRegister>({
-      resolver: zodResolver(loginAndRegisterUserSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } =
+        useForm<formLoginAndRegister>({
+            resolver: zodResolver(loginAndRegisterUserSchema),
+        });
 
-  const router = useRouter();
+    const router = useRouter();
 
-  const onSubmit = async (data: formLoginAndRegister) => {
-    try {
-      const response = await fetch("/api/adminLogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    const onSubmit = async (data: formLoginAndRegister) => {
+        try {
+            const response = await fetch('/api/adminLogin', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+                credentials: "include"  // necessário para que o navegador aceite o cookie
+            });
 
-      const result = await response.json();
+            const result = await response.json();
 
-      if (!response.ok) {
-        alert(result.error || "Erro ao fazer login");
-        return;
-      }
+            if (!response.ok) {
+                alert(result.error || 'Erro ao fazer login');
+                return;
+            }
 
-      alert("Login realizado com sucesso!");
+            alert('Login realizado com sucesso!');
+            router.push('/admin/DashboardProduct');
 
-      // aguarda um instante para garantir que o cookie foi salvo
-      setTimeout(() => {
-        router.push("/admin/DashboardProduct");
-      }, 300);
-
-    } catch (err) {
-      console.error("Erro ao fazer login:", err);
-      alert("Erro ao fazer login, tente novamente.");
-    }
-  };
+        } catch (err) {
+            console.error('Erro ao fazer login:', err);
+            alert('Erro ao fazer login, tente novamente.');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

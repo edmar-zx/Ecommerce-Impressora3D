@@ -28,21 +28,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
     }
 
-    // 🔑 Gera token JWT
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    // Gera token JWT
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1h" });
 
-    // 🍪 Define o cookie HttpOnly
+    // Cria resposta e define cookie httpOnly
     const response = NextResponse.json({ message: "Login bem-sucedido" });
     response.cookies.set("authToken", token, {
-      httpOnly: true, // não acessível pelo JS
-      secure: process.env.NODE_ENV === "production", // só HTTPS em prod
-      sameSite: "strict",
-      maxAge: 60 * 60, // 1 hora
-      path: "/",
+      httpOnly: true,                     // não acessível pelo JS
+      secure: process.env.NODE_ENV === "production", 
+      maxAge: 60 * 60,                    // 1 hora
+      path: "/",                          // disponível em todas as rotas
+      sameSite: "strict",                 // proteção CSRF básica
     });
 
     return response;
