@@ -42,14 +42,7 @@ export default function LoginForm() {
             // **AGUARDA um pouco para o cookie ser processado**
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            // **VERIFICA se o cookie está presente**
-            const hasCookie = document.cookie.includes('authToken');
-            console.log("🍪 Cookie authToken no cliente:", hasCookie);
-
-            if (!hasCookie) {
-                console.warn("⚠️ Cookie não encontrado no cliente após login");
-            }
-
+        
             alert('Login realizado com sucesso!');
 
             // **REDIRECIONAMENTO FORÇADO - método mais confiável**
