@@ -53,7 +53,8 @@ export default function LoginForm() {
             alert('Login realizado com sucesso!');
 
             // **REDIRECIONAMENTO FORÇADO - método mais confiável**
-            window.location.href = '/admin/DashboardProduct';
+            /* window.location.href = '/admin/DashboardProduct'; */
+            router.push('/admin/DashboardProduct');
 
         } catch (err) {
             console.error('❌ Erro ao fazer login:', err);
