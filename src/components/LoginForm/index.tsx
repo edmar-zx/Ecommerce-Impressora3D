@@ -5,22 +5,35 @@ import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 
 export default function LoginForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<formLoginAndRegister>({ resolver: zodResolver(loginAndRegisterUserSchema) })
+    const router = useRouter()
 
     const onSubmit = async (data: formLoginAndRegister) => {
         try {
-            const response = await fetch('/api/adminRegister', {
+            const response = await fetch('/api/adminLogin', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             })
 
-            if (response.ok) alert('Usuário cadastrado com sucesso !!! ')
+            const result = await response.json()
+
+            if (!response.ok) {
+                alert(result.error || 'Erro ao fazer login')
+                return
+            }
+
+            alert('Login realizado com sucesso!')
+
+            // 🔄 Redireciona para outra página (ex: dashboard)
+            router.push('/admin/DashboardProduct')
+
         } catch (err) {
-            console.log('Erro ao registrar usuário: ', err)
-            alert('Erro ao registrar usuário')
+            console.error('Erro ao fazer login:', err)
+            alert('Erro ao fazer login, tente novamente.')
         }
     }
 
