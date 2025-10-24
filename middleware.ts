@@ -6,20 +6,17 @@ const SECRET = process.env.JWT_SECRET!;
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value;
-  console.log("Cookie authToken:", token);
 
   if (!token) {
-    console.log("dentro do if:::;Cookie authToken:", token);
+    console.log("Sem token, redirecionando...");
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   try {
-    // Verifica se o token é válido
     jwt.verify(token, SECRET);
-    console.log("Passou do jwt verificacao Cookie authToken:", token);
     return NextResponse.next();
   } catch (err) {
-    console.log("catcg error: Cookie authToken:", token);
+    console.log("Token inválido:", err);
     return NextResponse.redirect(new URL("/", req.url));
   }
 }

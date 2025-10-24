@@ -32,7 +32,7 @@ export default function LoginForm() {
             }
 
             alert('Login realizado com sucesso!');
-            router.push('/admin/DashboardProduct');
+            setTimeout(() => router.push('/admin/DashboardProduct'), 100);
 
         } catch (err) {
             console.error('Erro ao fazer login:', err);
