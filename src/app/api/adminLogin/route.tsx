@@ -34,11 +34,11 @@ export async function POST(req: Request) {
     // Cria resposta e define cookie httpOnly
     const response = NextResponse.json({ message: "Login bem-sucedido" });
     response.cookies.set("authToken", token, {
-      httpOnly: true,                     // não acessível pelo JS
-      secure: process.env.NODE_ENV === "production", 
-      maxAge: 60 * 60,                    // 1 hora
-      path: "/",                          // disponível em todas as rotas
-      sameSite: "strict",                 // proteção CSRF básica
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax", // ✅ permite navegação normal sem perder o cookie
+      maxAge: 60 * 60,
+      path: "/",
     });
 
     return response;
