@@ -29,6 +29,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
         if (selected) {
             setFile(selected);
             setPreview(URL.createObjectURL(selected));
+            onChange({ ...formData, imagem: selected }); // armazenar File temporariamente
         }
     };
 
@@ -64,7 +65,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                                 type="file"
                                 onChange={handleFileChange}
                                 className="hover:cursor-pointer !border !border-solid !border-black"
-                                value={formData.imagem}
                             />
                             {preview && (
                                 <img src={preview} alt="Preview" width={200} className="mt-2 rounded-md" />

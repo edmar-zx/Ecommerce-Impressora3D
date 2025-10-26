@@ -84,36 +84,34 @@ export default function ProdutoDashboard() {
 
     const handleCreate = async () => {
         try {
-            const body: Omit<Produto, "_id"> = {
-                ...formData,
-                preco: Number(formData.preco),
-                desconto: Number(formData.desconto) || 0,
-            };
+            const form_data = new FormData();
 
-            const form_Data = new FormData();
-            // form_Data.append("_id", formData._id)
-            form_Data.append("nome", formData.nome)
-            form_Data.append("descricao", formData.descricao)
-            form_Data.append("categoria", formData.categoria)
-            form_Data.append("imagem", formData.imagem)
-            form_Data.append("material", formData.material)
-            form_Data.append("cor", formData.cor)
-            form_Data.append("acabamento", formData.acabamento)
-            form_Data.append("peso", formData.peso)
-            form_Data.append("dimensoes", formData.dimensoes)
-            form_Data.append("preco", Number(formData.preco))
-            form_Data.append("desconto", Number(formData.desconto))
-            form_Data.append("estoque", formData.estoque)
-            form_Data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao)
+            // Campos de texto/número
+            form_data.append("nome", formData.nome);
+            form_data.append("descricao", formData.descricao);
+            form_data.append("categoria", formData.categoria);
+            form_data.append("material", formData.material);
+            form_data.append("cor", formData.cor);
+            form_data.append("acabamento", formData.acabamento);
+            form_data.append("peso", String(formData.peso));
+            form_data.append("preco", String(formData.preco));
+            form_data.append("desconto", String(formData.desconto));
+            form_data.append("estoque", String(formData.estoque));
+            form_data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao);
+            form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
+
+            // Campo de imagem
+            if (formData.imagem instanceof File) {
+                form_data.append("imagem", formData.imagem);
+            }
 
             const res = await fetch("/api/produtos", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
+                body: form_data, // ✅ multipart/form-data automaticamente
             });
 
             if (res.ok) {
-                alert("Produto Cadastrado com Sucesso");
+                alert("Produto cadastrado com sucesso!");
                 fetchProdutos();
                 setFormData({ ...initialFormData });
                 handleCloseModal();
@@ -130,24 +128,37 @@ export default function ProdutoDashboard() {
         if (!produtoAtual?._id) return;
 
         try {
-            // Remover _id de formData antes de enviar para o $set
-            const { _id, ...fields } = formData;
+            const form_data = new FormData();
 
-            const body = {
-                ...fields,
-                id: produtoAtual._id, // id separado para filtro
-                preco: Number(formData.preco),
-                desconto: Number(formData.desconto) || 0,
-            };
+            // Campos de texto/número
+            form_data.append("nome", formData.nome);
+            form_data.append("descricao", formData.descricao);
+            form_data.append("categoria", formData.categoria);
+            form_data.append("material", formData.material);
+            form_data.append("cor", formData.cor);
+            form_data.append("acabamento", formData.acabamento);
+            form_data.append("peso", String(formData.peso));
+            form_data.append("preco", String(formData.preco));
+            form_data.append("desconto", String(formData.desconto));
+            form_data.append("estoque", String(formData.estoque));
+            form_data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao);
+            form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
+
+            // Imagem
+            if (formData.imagem instanceof File) {
+                form_data.append("imagem", formData.imagem);
+            }
+
+            // Passando o ID como campo separado
+            form_data.append("id", produtoAtual._id);
 
             const res = await fetch("/api/produtos", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
+                body: form_data, // multipart/form-data
             });
 
             if (res.ok) {
-                alert("Produto Atualizado com Sucesso");
+                alert("Produto atualizado com sucesso!");
                 fetchProdutos();
                 handleCloseModal();
             } else {
@@ -158,6 +169,7 @@ export default function ProdutoDashboard() {
             console.error("Erro ao atualizar produto:", err);
         }
     };
+
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -215,29 +227,45 @@ export default function ProdutoDashboard() {
             <ProductList>
                 <TableHeader>
                     <TableText><strong>ID</strong></TableText>
+                    <TableText><strong>Imagem</strong></TableText>
                     <TableText><strong>Nome</strong></TableText>
                     <TableText><strong>Categoria</strong></TableText>
                     <TableText><strong>Preço</strong></TableText>
                     <TableText><strong>Cor</strong></TableText>
-                    <TableText><strong>Em Promoção</strong></TableText>
+                    <TableText><strong>Desconto</strong></TableText>
+                    <TableText><strong>Estoque</strong></TableText>
                     <TableText><strong>Ações</strong></TableText>
                 </TableHeader>
-                {produtosFiltrados.map(p => (
+
+                {produtosFiltrados.map((p) => (
                     <ProductItem key={p._id}>
                         <TableText>{p._id}</TableText>
+                        <TableText>
+                            {p.imagem ? (
+                                <img
+                                    src={p.imagem}
+                                    alt={p.nome}
+                                    width={50}
+                                    height={50}
+                                    style={{ objectFit: "cover", borderRadius: "4px" }}
+                                />
+                            ) : (
+                                "Sem imagem"
+                            )}
+                        </TableText>
                         <TableText>{p.nome}</TableText>
                         <TableText>{p.categoria}</TableText>
-                        <TableText>R$ {p.preco}</TableText>
+                        <TableText>R$ {p.preco.toFixed(2)}</TableText>
                         <TableText>{p.cor}</TableText>
-                        <TableText>
-                            {(Number(p.desconto) > 0 ? `${p.desconto}%` : "Não")}
-                        </TableText>
+                        <TableText>{p.desconto > 0 ? `${p.desconto}%` : "Não"}</TableText>
+                        <TableText>{p.estoque}</TableText>
                         <TableText onClick={() => handleOpenModal(p)}>
-                            <FaEdit />
+                            <FaEdit style={{ cursor: "pointer" }} />
                         </TableText>
                     </ProductItem>
                 ))}
             </ProductList>
+
         </Container>
     );
 }
