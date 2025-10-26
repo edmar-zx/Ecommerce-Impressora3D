@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { useState } from "react";
 import { DropdownField } from "../DropdownField";
 import { Produto } from "@/types/product";
 import {
@@ -21,6 +21,16 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
     const materiais = ["PLA", "ABS", "PETG", "Resina", "TPU"];
     const cores = ["Branco", "Preto", "Vermelho", "Azul", "Verde", "Amarelo", "Outro"];
     const tempoDeProducao = ["1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h"];
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selected = e.target.files?.[0];
+        if (selected) {
+            setFile(selected);
+            setPreview(URL.createObjectURL(selected));
+        }
+    };
 
     return (
         <ModalContainer>
@@ -37,9 +47,9 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                     </FieldWrapper>
 
                     {/* TRATAR IMAGEM DEPOIS */}
-                    {/*   <FieldWrapper full>
-                        <Text>Imagens (URLs)</Text>
-                        <TextArea
+                    <FieldWrapper full>
+                        <Text>Imagem</Text>
+                        {/* <TextArea
                             placeholder="Cole as URLs separadas por vírgula"
                             value={formData.imagens?.join(", ") || ""}
                             onChange={(e) =>
@@ -48,8 +58,19 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                                     imagens: e.target.value.split(",").map((i) => i.trim()),
                                 })
                             }
-                        />
-                    </FieldWrapper> */}
+                        /> */}
+                        <div className="flex">
+                            <Input
+                                type="file"
+                                onChange={handleFileChange}
+                                className="hover:cursor-pointer !border !border-solid !border-black"
+                                value={formData.imagem}
+                            />
+                            {preview && (
+                                <img src={preview} alt="Preview" width={200} className="mt-2 rounded-md" />
+                            )}
+                        </div>
+                    </FieldWrapper>
 
                     <DropdownField
                         label="Categoria"

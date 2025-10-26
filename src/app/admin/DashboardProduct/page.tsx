@@ -22,6 +22,7 @@ export default function ProdutoDashboard() {
         nome: "",
         descricao: "",
         categoria: "",
+        imagem: "",
         material: "",
         cor: "",
         acabamento: "",
@@ -88,6 +89,22 @@ export default function ProdutoDashboard() {
                 preco: Number(formData.preco),
                 desconto: Number(formData.desconto) || 0,
             };
+
+            const form_Data = new FormData();
+            // form_Data.append("_id", formData._id)
+            form_Data.append("nome", formData.nome)
+            form_Data.append("descricao", formData.descricao)
+            form_Data.append("categoria", formData.categoria)
+            form_Data.append("imagem", formData.imagem)
+            form_Data.append("material", formData.material)
+            form_Data.append("cor", formData.cor)
+            form_Data.append("acabamento", formData.acabamento)
+            form_Data.append("peso", formData.peso)
+            form_Data.append("dimensoes", formData.dimensoes)
+            form_Data.append("preco", Number(formData.preco))
+            form_Data.append("desconto", Number(formData.desconto))
+            form_Data.append("estoque", formData.estoque)
+            form_Data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao)
 
             const res = await fetch("/api/produtos", {
                 method: "POST",

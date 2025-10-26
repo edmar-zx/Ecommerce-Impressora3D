@@ -4,7 +4,7 @@ export interface Produto {
     nome: string;
     descricao: string;
     categoria: string;
-    /* imagens?: string[];  */// tratar depois
+    imagem: string;  // tratar depois
     material: string;
     cor: string; 
     acabamento: string; // liso, polido, pintado, etc.
