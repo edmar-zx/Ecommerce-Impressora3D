@@ -1,26 +1,14 @@
 'use client';
 import React from 'react';
-import styled from 'styled-components';
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <Container>
+    <div className="h-screen">
       <Link href="/admin/DashboardProduct">
-        <Title>Cadastrar Produtos</Title>
+        <h1 className="text-black font-sans text-center text-[24px]">Cadastrar Produtos</h1>
         <h1>Olá</h1>
       </Link>
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  height: 100vh;
-`;
-
-const Title = styled.h1`
-  color: #000;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  font-size: 24px;
-`;

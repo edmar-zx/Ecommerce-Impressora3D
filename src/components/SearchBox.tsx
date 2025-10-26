@@ -1,5 +1,5 @@
 import React from "react";
-import { InputWrapper, Icon, BoxSearch } from "./styles";
+import { FaSearch } from "react-icons/fa";
 
 interface SearchBoxProps {
   value: string;
@@ -9,14 +9,15 @@ interface SearchBoxProps {
 
 export function SearchBox({ value, onChange, placeholder }: SearchBoxProps) {
   return (
-    <InputWrapper>
-      <Icon />
-      <BoxSearch
+    <form className="relative inline-block flex-1 min-w-[200px]">
+      <FaSearch className="absolute left-5 top-1/2 transform -translate-y-1/2 text-[#888]" />
+      <input
         type="text"
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        className="py-5 px-5 pl-12 bg-white rounded-lg shadow-sm border-none w-full max-w-[500px] box-border"
       />
-    </InputWrapper>
+    </form>
   );
 }

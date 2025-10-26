@@ -1,8 +1,8 @@
 'use client'
 
 import { useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { formLoginAndRegister, loginAndRegisterUserSchema } from "@/schemas/adminSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
