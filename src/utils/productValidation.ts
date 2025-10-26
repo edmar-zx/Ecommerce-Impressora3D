@@ -1,8 +1,7 @@
 import { Produto } from "@/types/product";
 
+// Na sua função validateProduct, ajuste para:
 export function validateProduct(produto: Produto) {
-
-    // Adicionar validao com zod
     // Verifica campos obrigatórios
     if (
         !produto.nome ||
@@ -16,9 +15,10 @@ export function validateProduct(produto: Produto) {
         !produto.dimensoes?.largura ||
         !produto.dimensoes?.profundidade ||
         !produto.preco ||
-        !produto.desconto ||
-        !produto.estoque ||
-        !produto.tempoEstimadoProducao
+        produto.desconto === undefined || // pode ser 0
+        produto.estoque === undefined || // pode ser 0
+        !produto.tempoEstimadoProducao ||
+        !produto.imagem // pode ser string vazia ou File
     ) {
         return false;
     }

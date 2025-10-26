@@ -1,8 +1,9 @@
 'use client';
-import React from "react";
+import React, { useState } from "react";
 import { DropdownField } from "./DropdownField";
 import { Produto } from "@/types/product";
 import { FaTrash, FaSave } from "react-icons/fa";
+import { Input } from "./ui/input";
 
 interface ModalProdutoProps {
     formData: Produto;
@@ -41,7 +42,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
             primary: "bg-black border-black hover:bg-white hover:text-black",
             danger: "bg-[#ff4d4f] border-[#ff4d4f] hover:bg-white hover:text-[#ff4d4f]"
         };
-        
+
         return (
             <button className={`${baseClasses} ${variants[variant]} ${className}`} {...props}>
                 {children}
@@ -57,10 +58,22 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
         );
     };
 
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selected = e.target.files?.[0];
+        if (selected) {
+            setFile(selected);
+            setPreview(URL.createObjectURL(selected));
+            onChange({ ...formData, imagem: selected }); // armazenar File temporariamente
+        }
+    };
+
     return (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-5 bg-white flex flex-col items-center w-1/2 max-h-[90vh] rounded-xl shadow-lg z-[1000]">
             <div className="w-full p-5 overflow-y-auto box-border">
-                <form 
+                <form
                     onSubmit={onSubmit}
                     className="grid grid-cols-2 gap-5 w-full"
                 >
@@ -73,6 +86,17 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                             onChange={(e) => onChange({ ...formData, nome: e.target.value })}
                             className="p-5 mb-1 rounded-lg bg-[#f5f5f5] border-none shadow-sm w-full box-border"
                         />
+                    </div>
+
+                    <div className="flex">
+                        <Input
+                            type="file"
+                            onChange={handleFileChange}
+                            className="hover:cursor-pointer !border !border-solid !border-black"
+                        />
+                        {preview && (
+                            <img src={preview} alt="Preview" width={200} className="mt-2 rounded-md" />
+                        )}
                     </div>
 
                     <DropdownField
@@ -303,6 +327,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                         </Button>
                     )}
                 </form>
+                
             </div>
         </div>
     );

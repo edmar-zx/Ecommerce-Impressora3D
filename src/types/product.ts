@@ -1,20 +1,17 @@
-
 export interface Produto {
     _id?: string;
     nome: string;
     descricao: string;
     categoria: string;
-    /* imagens?: string[];  */// tratar depois
+    imagem: string | File;  // string para URL, File para upload
     material: string;
-    cor: string; 
-    acabamento: string; // liso, polido, pintado, etc.
+    cor: string;
+    acabamento: string;
     peso: number;
-    dimensoes: { largura: number; altura: number; profundidade: number }; // em mm
-    preco: number; 
-    desconto: number; 
-    estoque: number; // quantidade disponível
-    tempoEstimadoProducao: string; //
-    /* tags?: string[]; */ // Adicionar depois tags de busca
+    dimensoes: { largura: number; altura: number; profundidade: number };
+    preco: number;
+    desconto: number;
+    estoque: number;
+    tempoEstimadoProducao: string;
     createAt?: string | Date;
 }
-
