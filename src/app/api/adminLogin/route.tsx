@@ -45,8 +45,8 @@ export async function POST(req: Request) {
     });
 
     // **CORREÇÃO CRÍTICA: Configuração do cookie para Vercel**
-    const requestOrigin = req.headers.get('origin');
-    const isVercel = requestOrigin?.includes('.vercel.app');
+  /*   const requestOrigin = req.headers.get('origin'); */
+    /* const isVercel = requestOrigin?.includes('.vercel.app'); */
     
     const response = NextResponse.json({ 
       message: "Login bem-sucedido",

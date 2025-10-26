@@ -7,6 +7,7 @@ import { ModalProduto } from "@/components/ModalProduto";
 import { Produto } from "@/types/product";
 import { validateProduct } from "@/utils/productValidation";
 import { TableText } from "@/components/tableText";
+import Image from "next/image";
 
 export default function ProdutoDashboard() {
     const [produtoAtual, setProdutoAtual] = useState<Produto | null>(null);
@@ -101,10 +102,6 @@ export default function ProdutoDashboard() {
                 form_data.append("imagem", formData.imagem);
             }
 
-            // Debug: verificar o que está no FormData
-            for (let [key, value] of form_data.entries()) {
-                console.log(key, value);
-            }
 
             const res = await fetch("/api/produtos", {
                 method: "POST",
@@ -262,13 +259,14 @@ export default function ProdutoDashboard() {
                         <TableText>{p._id}</TableText>
                         <TableText>
                             {p.imagem ? (
-                                <img
-                                    src={p.imagem}
+                                <Image
+                                    src={String(p.imagem)}
                                     alt={p.nome}
                                     width={50}
                                     height={50}
                                     style={{ objectFit: "cover", borderRadius: "4px" }}
                                 />
+                                
                             ) : (
                                 "Sem imagem"
                             )}

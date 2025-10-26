@@ -4,6 +4,7 @@ import { DropdownField } from "./DropdownField";
 import { Produto } from "@/types/product";
 import { FaTrash, FaSave } from "react-icons/fa";
 import { Input } from "./ui/input";
+import Image from "next/image";
 
 interface ModalProdutoProps {
     formData: Produto;
@@ -17,7 +18,6 @@ type ButtonVariant = "primary" | "danger";
 
 interface ButtonProps {
     variant: ButtonVariant;
-    full?: boolean;
     children: React.ReactNode;
     type?: "button" | "submit" | "reset";
     onClick?: () => void;
@@ -36,7 +36,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
     const cores = ["Branco", "Preto", "Vermelho", "Azul", "Verde", "Amarelo", "Outro"];
     const tempoDeProducao = ["1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h"];
 
-    const Button = ({ variant, full, children, className = "", ...props }: ButtonProps) => {
+    const Button = ({ variant, children, className = "", ...props }: ButtonProps) => {
         const baseClasses = "p-[15px] flex items-center justify-center border border-solid rounded-[8px] cursor-pointer w-60 gap-2 transition-colors duration-500";
         const variants: Record<ButtonVariant, string> = {
             primary: "bg-black border-black hover:bg-white hover:text-black",
@@ -58,13 +58,12 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
         );
     };
 
-    const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selected = e.target.files?.[0];
         if (selected) {
-            setFile(selected);
+           
             setPreview(URL.createObjectURL(selected));
             onChange({ ...formData, imagem: selected }); // armazenar File temporariamente
         }
@@ -95,7 +94,15 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                             className="hover:cursor-pointer !border !border-solid !border-black"
                         />
                         {preview && (
-                            <img src={preview} alt="Preview" width={200} className="mt-2 rounded-md" />
+                            <div className="relative w-200 h-40 mt-2 border">
+                                <Image
+                                    src={preview}
+                                    alt="Preview"
+                                    width={200}
+                                    height={200}
+                                    className="rounded-md object-cover"
+                                />
+                            </div>
                         )}
                     </div>
 
@@ -327,7 +334,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete }: ModalPr
                         </Button>
                     )}
                 </form>
-                
+
             </div>
         </div>
     );

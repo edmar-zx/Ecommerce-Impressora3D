@@ -8,10 +8,26 @@ import path from "path";
 
 const uploadDir = path.join(process.cwd(), "public", "uploads");
 
-
 // Garante que a pasta existe
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Interface para o body do FormData
+interface FormDataBody {
+  nome: string;
+  descricao: string;
+  categoria: string;
+  material: string;
+  cor: string;
+  acabamento: string;
+  peso: string;
+  preco: string;
+  desconto: string;
+  estoque: string;
+  tempoEstimadoProducao: string;
+  dimensoes: string;
+  id?: string;
 }
 
 // Função para salvar arquivo
@@ -31,14 +47,15 @@ async function saveFile(file: File): Promise<string> {
 // Função para processar FormData
 async function processFormData(request: NextRequest) {
   const formData = await request.formData();
-  const body: any = {};
+  const body: Partial<FormDataBody> = {};
   const files: { [key: string]: File } = {};
 
   for (const [key, value] of formData.entries()) {
     if (value instanceof File) {
       files[key] = value;
     } else {
-      body[key] = value;
+      // Type assertion para garantir a tipagem
+      body[key as keyof FormDataBody] = value as string;
     }
   }
 
@@ -90,18 +107,18 @@ export async function POST(req: NextRequest) {
 
     // Usando a tipagem Produto
     const produto: Omit<Produto, '_id'> = {
-      nome: body.nome,
-      descricao: body.descricao,
-      categoria: body.categoria,
-      material: body.material,
-      cor: body.cor,
-      acabamento: body.acabamento,
-      peso: Number(body.peso),
+      nome: body.nome || "",
+      descricao: body.descricao || "",
+      categoria: body.categoria || "",
+      material: body.material || "",
+      cor: body.cor || "",
+      acabamento: body.acabamento || "",
+      peso: Number(body.peso) || 0,
       dimensoes,
-      preco: Number(body.preco),
-      desconto: Number(body.desconto),
-      estoque: Number(body.estoque),
-      tempoEstimadoProducao: body.tempoEstimadoProducao,
+      preco: Number(body.preco) || 0,
+      desconto: Number(body.desconto) || 0,
+      estoque: Number(body.estoque) || 0,
+      tempoEstimadoProducao: body.tempoEstimadoProducao || "",
       imagem: imagemPath,
       createAt: new Date(),
     };
@@ -140,18 +157,18 @@ export async function PUT(req: NextRequest) {
       imagemAntiga = produtoAtual.imagem;
     }
 
-    const updateFields: Partial<Produto> = {
-      nome: body.nome,
-      descricao: body.descricao,
-      categoria: body.categoria,
-      material: body.material,
-      cor: body.cor,
-      acabamento: body.acabamento,
-      peso: Number(body.peso),
-      preco: Number(body.preco),
-      desconto: Number(body.desconto),
-      estoque: Number(body.estoque),
-      tempoEstimadoProducao: body.tempoEstimadoProducao,
+    const updateFields: Partial<Produto> = { /* ANALISAR ESSE || DEPOIS NA EDICAO */
+      nome: body.nome || "",
+      descricao: body.descricao || "",
+      categoria: body.categoria || "",
+      material: body.material || "",
+      cor: body.cor || "",
+      acabamento: body.acabamento || "",
+      peso: Number(body.peso) || 0,
+      preco: Number(body.preco) || 0,
+      desconto: Number(body.desconto) || 0,
+      estoque: Number(body.estoque) || 0,
+      tempoEstimadoProducao: body.tempoEstimadoProducao || "",
     };
 
     // Processar dimensões
