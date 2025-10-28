@@ -2,23 +2,23 @@ import { Mail, MapPin, MessageSquare } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 py-20 mt-16">
+    <footer className="bg-gray-500 py-20 mt-16">
       <div className="container mx-auto px-6">
         
-        {/* 1. Título da Seção */}
+       
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900">
             Entre em Contato
           </h2>
-          <p className="text-lg text-gray-600 mt-2">
+          <p className="text-lg text-#fff9f9-600 mt-2">
             Tire suas dúvidas ou peça um orçamento agora.
           </p>
         </div>
 
-        {/* 2. Grid de Cards */}
+      
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-          {/* Card 1: E-mail (Escuro) */}
+          
           <div className="bg-gray-800 text-white rounded-lg p-8 flex flex-col">
             <div className="w-12 h-12 border border-gray-600 rounded-lg flex items-center justify-center mb-6">
               <Mail size={24} className="text-red-500" />
@@ -37,7 +37,7 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Card 2: Conhecer (Claro) */}
+         
           <div className="bg-white text-gray-900 rounded-lg p-8 flex flex-col shadow-lg">
             <div className="w-12 h-12 border border-gray-200 rounded-lg flex items-center justify-center mb-6">
               <MapPin size={24} className="text-red-500" />
@@ -49,17 +49,17 @@ export default function Footer() {
               Confira nossa localização no mapa
             </p>
             <a 
-              href="#" // Coloque seu link do Google Maps aqui
+              href="#" 
               className="font-medium text-gray-900 hover:text-red-500 transition-colors"
             >
               Visualizar no Google Maps
             </a>
           </div>
 
-          {/* Card 3: WhatsApp (Escuro) */}
+          
           <div className="bg-gray-800 text-white rounded-lg p-8 flex flex-col">
             <div className="w-12 h-12 border border-gray-600 rounded-lg flex items-center justify-center mb-6">
-              {/* lucide-react não tem ícone do WhatsApp. Usei MessageSquare. */}
+              
               <MessageSquare size={24} className="text-red-500" /> 
             </div>
             <h3 className="text-2xl font-semibold mb-2">

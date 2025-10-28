@@ -1,11 +1,10 @@
-// NOTA: Coloque sua imagem em /public/images/hero-bg.jpg
-// ou altere o caminho no style={{...}}
+
 
 export default function Hero() {
   return (
     <section 
-      className="relative w-full h-[80vh] bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+      className="relative w-full h-[85vh]  bg-no-repeat bg-cover"
+      style={{ backgroundImage: "url('/hero-bg.jpg')",backgroundPosition: "center 20%" }}
     >
       {/* Overlay para escurecer a imagem */}
       <div className="absolute inset-0 bg-black opacity-40"></div>

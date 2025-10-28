@@ -8,14 +8,14 @@ export default function Navbar() {
         
         {/* 1. Logo */}
         <Link href="/" className="text-3xl font-bold text-gray-900">
-          RYZEN
+          Mumu
         </Link>
 
         {/* 2. Barra de Busca */}
         <div className="relative flex-1 max-w-lg mx-8">
           <input
             type="text"
-            className="w-full px-4 py-2 pr-10 bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 pr-10 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
             <Search size={20} />

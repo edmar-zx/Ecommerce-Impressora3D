@@ -5,6 +5,7 @@ import Link from "next/link";
 import Hero from '@/components/Hero';
 import Categories from '@/components/Categories';
 import { ProductList } from './DashboardProduct/styles';
+import HeroSection from '@/components/HeroSection';
 
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <Hero />
       <Categories />
       <ProductList />
+      <HeroSection/>
     </div>
   );
 }
