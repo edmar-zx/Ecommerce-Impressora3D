@@ -1,11 +1,8 @@
 import { Produto } from "@/types/product";
 
+// Na sua função validateProduct, ajuste para:
 export function validateProduct(produto: Produto) {
-    // Permite imagem como string (URL) ou File (no client)
-    const hasImage =
-        (typeof produto.imagem === "string" && produto.imagem.trim() !== "") ||
-        (typeof produto.imagem === "object" && "name" in produto.imagem);
-
+    // Verifica campos obrigatórios
     if (
         !produto.nome ||
         !produto.descricao ||
@@ -13,17 +10,18 @@ export function validateProduct(produto: Produto) {
         !produto.material ||
         !produto.cor ||
         !produto.acabamento ||
-        produto.peso === undefined ||
-        produto.dimensoes?.altura === undefined ||
-        produto.dimensoes?.largura === undefined ||
-        produto.dimensoes?.profundidade === undefined ||
-        produto.preco === undefined ||
-        produto.desconto === undefined ||
-        produto.estoque === undefined ||
+        !produto.peso ||
+        !produto.dimensoes?.altura ||
+        !produto.dimensoes?.largura ||
+        !produto.dimensoes?.profundidade ||
+        !produto.preco ||
+        produto.desconto === undefined || // pode ser 0
+        produto.estoque === undefined || // pode ser 0
         !produto.tempoEstimadoProducao ||
-        !hasImage
+        !produto.imagem // pode ser string vazia ou File
     ) {
         return false;
     }
+
     return true;
 }
