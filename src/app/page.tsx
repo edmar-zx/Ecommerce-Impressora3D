@@ -2,14 +2,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from "next/link";
+import Hero from '@/components/Hero';
+import Categories from '@/components/Categories';
+import { ProductList } from './DashboardProduct/styles';
+
 
 export default function Home() {
   return (
-    <Container>
-      <Link href="/DashboardProduct">
-        <Title>Cadastrar Produtos</Title>
-      </Link>
-    </Container>
+    <div>
+      <Hero />
+      <Categories />
+      <ProductList />
+    </div>
   );
 }
 
@@ -23,3 +27,4 @@ const Title = styled.h1`
   text-align: center;
   font-size: 24px;
 `;
+
