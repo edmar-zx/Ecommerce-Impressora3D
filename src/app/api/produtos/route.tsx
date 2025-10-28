@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
 
     const dimensoes = body.dimensoes ? JSON.parse(body.dimensoes) : { largura: 0, altura: 0, profundidade: 0 };
 
-    // Usando a tipagem Produto
+    // Usando a tipagem Produto 
     const produto: Omit<Produto, '_id'> = {
       nome: body.nome || "",
       descricao: body.descricao || "",
