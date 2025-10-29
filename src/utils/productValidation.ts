@@ -18,7 +18,8 @@ export function validateProduct(produto: Produto) {
         produto.desconto === undefined || // pode ser 0
         produto.estoque === undefined || // pode ser 0
         !produto.tempoEstimadoProducao ||
-        !produto.imagem // pode ser string vazia ou File
+        !produto.imagem || // pode ser string vazia ou File
+        !produto.destaque === undefined
     ) {
         return false;
     }

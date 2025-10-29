@@ -14,4 +14,5 @@ export interface Produto {
     estoque: number;
     tempoEstimadoProducao: string;
     createAt?: string | Date;
+    destaque: Boolean
 }

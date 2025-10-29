@@ -28,6 +28,7 @@ interface FormDataBody {
   tempoEstimadoProducao: string;
   dimensoes: string;
   id?: string;
+  destaque?: string; 
 }
 
 // Função para salvar arquivo
@@ -120,6 +121,7 @@ export async function POST(req: NextRequest) {
       estoque: Number(body.estoque) || 0,
       tempoEstimadoProducao: body.tempoEstimadoProducao || "",
       imagem: imagemPath,
+      destaque: body.destaque ? body.destaque === 'true' : false,
       createAt: new Date(),
     };
 
@@ -169,6 +171,7 @@ export async function PUT(req: NextRequest) {
       desconto: Number(body.desconto) || 0,
       estoque: Number(body.estoque) || 0,
       tempoEstimadoProducao: body.tempoEstimadoProducao || "",
+      destaque: body.destaque ? body.destaque === 'true' : false,
     };
 
     // Processar dimensões

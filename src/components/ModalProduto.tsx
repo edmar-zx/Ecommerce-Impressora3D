@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { DropdownField } from "./DropdownField";
 import { Produto } from "@/types/product";
-import { FaTrash, FaSave, FaUpload, FaRuler, FaWeight, FaPalette, FaTimes } from "react-icons/fa";
+import { FaTrash, FaSave, FaUpload, FaRuler, FaWeight, FaTimes, FaStar } from "react-icons/fa";
 import { Input } from "./ui/input";
 import Image from "next/image";
 
@@ -10,10 +10,8 @@ interface ModalProdutoProps {
     formData: Produto;
     onChange: (data: Produto) => void;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    onDelete: () => void;
     buttonText: string;
     onClose: () => void;
-
 }
 
 type ButtonVariant = "primary" | "danger";
@@ -31,7 +29,7 @@ interface TextButtonProps {
     children: React.ReactNode;
 }
 
-export function ModalProduto({ formData, onChange, onSubmit, onDelete, onClose }: ModalProdutoProps) {
+export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalProdutoProps) {
     const categorias = ["Miniaturas", "Utensílios", "Decoração", "Acessórios", "Brinquedos"];
     const acabamentos = ["Liso", "Polido", "Pintado", "Texturizado"];
     const materiais = ["PLA", "ABS", "PETG", "Resina", "TPU"];
@@ -42,7 +40,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete, onClose }
         const baseClasses = "p-4 flex items-center justify-center border border-solid rounded-xl cursor-pointer w-full gap-3 transition-all duration-300 font-semibold shadow-sm hover:shadow-md";
         const variants: Record<ButtonVariant, string> = {
             primary: "bg-gray-900 border-gray-900 hover:bg-gray-800 hover:border-gray-800 text-white",
-            danger: "bg-red-600 border-red-600 hover:bg-red-700 hover:border-red-700 text-white"
+            danger: "bg-red-400 border-red-400 hover:bg-red-500 hover:border-red-700 text-white"
         };
 
         return (
@@ -68,6 +66,11 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete, onClose }
             setPreview(URL.createObjectURL(selected));
             onChange({ ...formData, imagem: selected });
         }
+    };
+
+    // Função para alternar o destaque
+    const toggleDestaque = (valor: boolean) => {
+        onChange({ ...formData, destaque: valor });
     };
 
     return (
@@ -320,6 +323,42 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete, onClose }
                         />
                     </div>
 
+                    {/* Produto em Destaque */}
+                    <div className="flex flex-col items-start w-full col-span-2">
+                        <label className="text-sm font-bold text-gray-700 text-left mb-2 flex items-center gap-2">
+                            <FaStar className="text-yellow-500" />
+                            Produto em Destaque
+                        </label>
+                        <div className="flex gap-3 w-full">
+                            <button
+                                type="button"
+                                onClick={() => toggleDestaque(true)}
+                                className={`flex-1 p-4 rounded-xl border-2 transition-all duration-300 font-semibold flex items-center justify-center gap-2 ${
+                                    formData.destaque 
+                                        ? 'bg-yellow-100 border-yellow-500 text-yellow-700 shadow-md' 
+                                        : 'bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100'
+                                }`}
+                            >
+                                <FaStar className={formData.destaque ? "text-yellow-500" : "text-gray-400"} />
+                                Sim
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => toggleDestaque(false)}
+                                className={`flex-1 p-4 rounded-xl border-2 transition-all duration-300 font-semibold flex items-center justify-center gap-2 ${
+                                    !formData.destaque 
+                                        ? 'bg-gray-100 border-gray-500 text-gray-700 shadow-md' 
+                                        : 'bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100'
+                                }`}
+                            >
+                                Não
+                            </button>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">
+                            Produtos em destaque aparecerão na seção principal do site
+                        </p>
+                    </div>
+
                     {/* Preço, Desconto e Estoque */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full col-span-2">
                         <div className="flex flex-col items-start w-full">
@@ -431,9 +470,8 @@ export function ModalProduto({ formData, onChange, onSubmit, onDelete, onClose }
                                 <FaSave className="text-white group-hover:scale-110 transition-transform" />
                                 <TextButton variant="primary">Salvar Alterações</TextButton>
                             </Button>
-                            <Button type="button" onClick={onDelete} variant="danger" className="group">
-                                <FaTrash className="text-white group-hover:scale-110 transition-transform" />
-                                <TextButton variant="danger">Excluir Produto</TextButton>
+                            <Button type="button" onClick={onClose} variant="danger" className="group">
+                                <TextButton variant="danger">Cancelar</TextButton>
                             </Button>
                         </div>
                     ) : (

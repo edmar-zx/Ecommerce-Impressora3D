@@ -1,18 +1,38 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import { Cards } from "@/components/Cards";
 import { SearchBox } from "@/components/SearchBox";
 import { ModalProduto } from "@/components/ModalProduto";
+
 import { Produto } from "@/types/product";
 import { validateProduct } from "@/utils/productValidation";
 import { TableText } from "@/components/tableText";
 import Image from "next/image";
+import { ModalDelete } from "@/components/modalDelete"
+
+
+const getColorHex = (colorName: string): string => {
+    const colors: { [key: string]: string } = {
+        branco: "#ffffff",
+        preto: "#000000",
+        vermelho: "#ff0000",
+        azul: "#0000ff",
+        verde: "#00ff00",
+        amarelo: "#ffff00",
+        outro: "#808080",
+    };
+
+    const normalizedColor = colorName.toLowerCase().trim();
+    return colors[normalizedColor] || normalizedColor;
+};
 
 export default function ProdutoDashboard() {
     const [produtoAtual, setProdutoAtual] = useState<Produto | null>(null);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [produtoParaDeletar, setProdutoParaDeletar] = useState<Produto | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     const initialFormData: Produto = {
@@ -28,16 +48,31 @@ export default function ProdutoDashboard() {
         preco: 0,
         desconto: 0,
         estoque: 0,
-        tempoEstimadoProducao: ""
+        tempoEstimadoProducao: "",
+        destaque: false
     };
 
     const [formData, setFormData] = useState<Produto>({ ...initialFormData });
+
     const handleOpenModal = (produto: Produto | null = null) => {
         setProdutoAtual(produto);
         setFormData(produto || { ...initialFormData });
         setShowModal(true);
     };
+
     const handleCloseModal = () => setShowModal(false);
+
+    // Funções para o modal de deletar
+    const handleOpenDeleteModal = (produto: Produto) => {
+        setProdutoParaDeletar(produto);
+        setShowDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setProdutoParaDeletar(null);
+    };
+
     const fetchProdutos = async () => {
         try {
             const res = await fetch('/api/produtos');
@@ -53,22 +88,19 @@ export default function ProdutoDashboard() {
     }, []);
 
     const handleDelete = async () => {
-        if (!produtoAtual?._id) return;
-
-        const confirmDelete = confirm("Tem certeza que deseja deletar este produto?");
-        if (!confirmDelete) return;
+        if (!produtoParaDeletar?._id) return;
 
         try {
             const res = await fetch("/api/produtos", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: produtoAtual._id })
+                body: JSON.stringify({ id: produtoParaDeletar._id })
             });
 
             if (res.ok) {
                 alert("Produto deletado com sucesso!");
                 fetchProdutos();
-                handleCloseModal();
+                handleCloseDeleteModal();
             } else {
                 const data = await res.json();
                 alert(data.error || "Erro ao deletar o produto");
@@ -96,16 +128,16 @@ export default function ProdutoDashboard() {
             form_data.append("estoque", String(formData.estoque));
             form_data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao);
             form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
+            form_data.append("destaque", String(formData.destaque));
 
             // Campo de imagem
             if (formData.imagem instanceof File) {
                 form_data.append("imagem", formData.imagem);
             }
 
-
             const res = await fetch("/api/produtos", {
                 method: "POST",
-                body: form_data, // ✅ multipart/form-data automaticamente
+                body: form_data,
             });
 
             if (res.ok) {
@@ -141,6 +173,7 @@ export default function ProdutoDashboard() {
             form_data.append("estoque", String(formData.estoque));
             form_data.append("tempoEstimadoProducao", formData.tempoEstimadoProducao);
             form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
+            form_data.append("destaque", String(formData.destaque));
 
             // Imagem
             if (formData.imagem instanceof File) {
@@ -152,7 +185,7 @@ export default function ProdutoDashboard() {
 
             const res = await fetch("/api/produtos", {
                 method: "PUT",
-                body: form_data, // multipart/form-data
+                body: form_data,
             });
 
             if (res.ok) {
@@ -167,7 +200,6 @@ export default function ProdutoDashboard() {
             console.error("Erro ao atualizar produto:", err);
         }
     };
-
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -210,7 +242,6 @@ export default function ProdutoDashboard() {
             <div className="flex justify-between">
                 <Cards emoji="📦" title="Produtos" value={produtos.length} />
                 <Cards emoji="👥" title="Categorias" value={5} />
-
             </div>
 
             <div className="flex justify-between items-center mt-5 flex-wrap gap-2.5 bg-[#f5f5f5] p-5 rounded-xl">
@@ -235,17 +266,24 @@ export default function ProdutoDashboard() {
                         formData={formData}
                         onChange={setFormData}
                         onSubmit={handleSubmit}
-                        onDelete={handleDelete}
+                        
                         buttonText={produtoAtual?._id ? "Salvar Alterações" : "Cadastrar Produto"}
                         onClose={handleCloseModal}
                     />
                 </>
             )}
 
-            <div className="mt-5 border-none rounded-lg">
-                {/* Cabeçalho da tabela */}
+            {/* Modal de confirmação para deletar */}
+            <ModalDelete
+                isOpen={showDeleteModal}
+                onClose={handleCloseDeleteModal}
+                onConfirm={handleDelete}
+                produtoNome={produtoParaDeletar?.nome || ""}
+            />
 
-                <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%]  font-bold p-5 bg-[#3a5277]  mb-2.5 rounded shadow-sm items-center">
+            <div className="mt-5 border-none rounded-lg bg-amber-50">
+                {/* Cabeçalho da tabela */}
+                <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] font-bold p-5 bg-[#3a5277] rounded-t-xl shadow-sm items-center">
                     <TableText><strong>Nome</strong></TableText>
                     <TableText><strong>Categoria</strong></TableText>
                     <TableText><strong>Preço</strong></TableText>
@@ -256,22 +294,21 @@ export default function ProdutoDashboard() {
                 </div>
 
                 {/* Corpo da tabela */}
-                <div className="space-y-2">
+                <div className="s">
                     {produtosFiltrados.map(p => (
                         <div
                             key={p._id}
-                            className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] p-5 bg-[#f5f5f5] shadow-sm rounded items-center min-h-[80px]"
+                            className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] p-3 bg-[#f5f5f5] shadow-sm border items-center min-h-[80px]"
                         >
                             {/* Coluna Nome com Imagem */}
                             <div className="flex items-center gap-3 min-w-0">
-                                <div className="flex-shrink-0 w-20 h-20 relative">
+                                <div className="flex-shrink-0 w-14 h-14 relative">
                                     {p.imagem ? (
                                         <Image
                                             src={String(p.imagem)}
                                             alt={p.nome}
                                             fill
-                                            className="object-cover rounded-xl border-1 border-gray-300 p-2"
-                                        
+                                            className="object-cover rounded-xl border-1 border-gray-300"
                                         />
                                     ) : (
                                         <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
@@ -279,7 +316,7 @@ export default function ProdutoDashboard() {
                                         </div>
                                     )}
                                 </div>
-                                <TableText className="truncate font-medium text-gray-900 min-w-0">
+                                <TableText className="truncate font-medium text-gray-900 min-w-0 mr-20">
                                     {p.nome}
                                 </TableText>
                             </div>
@@ -296,10 +333,12 @@ export default function ProdutoDashboard() {
                             </TableText>
 
                             <TableText className="text-center">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 ">
                                     <div
-                                        className="w-4 h-4 rounded-full border border-gray-300 flex-shrink-0"
-                                        style={{ backgroundColor: p.cor.toLowerCase() }}
+                                        className="w-4 h-4 rounded-full flex-shrink-0 border-1 border-black"
+                                        style={{
+                                            backgroundColor: getColorHex(p.cor)
+                                        }}
                                     />
                                     <span className="text-sm text-gray-600 truncate hidden sm:block">
                                         {p.cor}
@@ -317,21 +356,33 @@ export default function ProdutoDashboard() {
                             </TableText>
 
                             <TableText className="text-center">
-                                <span className={`inline-block px-2 py-1 text-xs rounded-full ${Number(p.estoque) > 10
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-yellow-100 text-yellow-800'
+                                <span className={`inline-block px-2 py-1 text-xs rounded-full ${Number(p.estoque) === 0
+                                        ? `bg-red-100 text-red-800`
+                                        : Number(p.estoque) > 10
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-yellow-100 text-yellow-800'
                                     }`}>
                                     {p.estoque}
                                 </span>
                             </TableText>
 
                             <TableText className="text-center">
-                                <button
-                                    onClick={() => handleOpenModal(p)}
-                                    className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 w-full"
-                                >
-                                    <FaEdit className="text-white text-sm" />
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleOpenModal(p)}
+                                        className="p-2 text-white rounded-lg hover:bg-gray-300 hover:cursor-pointer"
+                                        title="Editar produto"
+                                    >
+                                        <FaEdit className="text-black text-md" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleOpenDeleteModal(p)}
+                                        className="p-2 text-white rounded-lg hover:bg-gray-300 hover:cursor-pointer "
+                                        title="Deletar produto"
+                                    >
+                                        <FaTrash className="text-red-500 text-md" />
+                                    </button>
+                                </div>
                             </TableText>
                         </div>
                     ))}
