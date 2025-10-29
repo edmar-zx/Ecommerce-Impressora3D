@@ -210,11 +210,10 @@ export default function ProdutoDashboard() {
             <div className="flex justify-between">
                 <Cards emoji="📦" title="Produtos" value={produtos.length} />
                 <Cards emoji="👥" title="Categorias" value={5} />
-                <Cards emoji="📦" title="Produtos" value={produtos.length} />
-                <Cards emoji="👥" title="Categorias" value={5} />
+
             </div>
 
-            <div className="flex justify-between items-center mt-5 flex-wrap gap-2.5">
+            <div className="flex justify-between items-center mt-5 flex-wrap gap-2.5 bg-[#f5f5f5] p-5 rounded-xl">
                 <SearchBox
                     placeholder="Pesquisar por nome ou ID"
                     value={searchTerm}
@@ -238,14 +237,15 @@ export default function ProdutoDashboard() {
                         onSubmit={handleSubmit}
                         onDelete={handleDelete}
                         buttonText={produtoAtual?._id ? "Salvar Alterações" : "Cadastrar Produto"}
+                        onClose={handleCloseModal}
                     />
                 </>
             )}
 
             <div className="mt-5 border-none rounded-lg">
-                <div className="flex font-bold p-5 bg-[#D9C9B6] mb-2.5 rounded shadow-sm justify-between text-center">
-                    <TableText><strong>ID</strong></TableText>
-                    <TableText><strong>Imagem</strong></TableText>
+                {/* Cabeçalho da tabela */}
+
+                <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%]  font-bold p-5 bg-[#3a5277]  mb-2.5 rounded shadow-sm items-center">
                     <TableText><strong>Nome</strong></TableText>
                     <TableText><strong>Categoria</strong></TableText>
                     <TableText><strong>Preço</strong></TableText>
@@ -254,36 +254,88 @@ export default function ProdutoDashboard() {
                     <TableText><strong>Estoque</strong></TableText>
                     <TableText><strong>Ações</strong></TableText>
                 </div>
-                {produtosFiltrados.map(p => (
-                    <div key={p._id} className="flex font-bold p-5 bg-[#f5f5f5] shadow-sm rounded mb-1 text-start justify-between">
-                        <TableText>{p._id}</TableText>
-                        <TableText>
-                            {p.imagem ? (
-                                <Image
-                                    src={String(p.imagem)}
-                                    alt={p.nome}
-                                    width={50}
-                                    height={50}
-                                    style={{ objectFit: "cover", borderRadius: "4px" }}
-                                />
-                                
-                            ) : (
-                                "Sem imagem"
-                            )}
-                        </TableText>
-                        <TableText>{p.nome}</TableText>
-                        <TableText>{p.categoria}</TableText>
-                        <TableText>R$ {p.preco}</TableText>
-                        <TableText>{p.cor}</TableText>
-                        <TableText>
-                            {(Number(p.desconto) > 0 ? `${p.desconto}%` : "Não")}
-                        </TableText>
-                        <TableText>{p.estoque}</TableText>
-                        <TableText onClick={() => handleOpenModal(p)}>
-                            <FaEdit />
-                        </TableText>
-                    </div>
-                ))}
+
+                {/* Corpo da tabela */}
+                <div className="space-y-2">
+                    {produtosFiltrados.map(p => (
+                        <div
+                            key={p._id}
+                            className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] p-5 bg-[#f5f5f5] shadow-sm rounded items-center min-h-[80px]"
+                        >
+                            {/* Coluna Nome com Imagem */}
+                            <div className="flex items-center gap-3 min-w-0">
+                                <div className="flex-shrink-0 w-20 h-20 relative">
+                                    {p.imagem ? (
+                                        <Image
+                                            src={String(p.imagem)}
+                                            alt={p.nome}
+                                            fill
+                                            className="object-cover rounded-xl border-1 border-gray-300 p-2"
+                                        
+                                        />
+                                    ) : (
+                                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
+                                            Sem imagem
+                                        </div>
+                                    )}
+                                </div>
+                                <TableText className="truncate font-medium text-gray-900 min-w-0">
+                                    {p.nome}
+                                </TableText>
+                            </div>
+
+                            {/* Demais colunas */}
+                            <TableText className="text-center truncate">
+                                <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full max-w-full truncate">
+                                    {p.categoria}
+                                </span>
+                            </TableText>
+
+                            <TableText className="text-center font-semibold text-gray-900">
+                                R$ {Number(p.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </TableText>
+
+                            <TableText className="text-center">
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className="w-4 h-4 rounded-full border border-gray-300 flex-shrink-0"
+                                        style={{ backgroundColor: p.cor.toLowerCase() }}
+                                    />
+                                    <span className="text-sm text-gray-600 truncate hidden sm:block">
+                                        {p.cor}
+                                    </span>
+                                </div>
+                            </TableText>
+
+                            <TableText className="text-center">
+                                <span className={`inline-block px-2 py-1 text-xs rounded-full ${Number(p.desconto) > 0
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-gray-100 text-gray-800'
+                                    }`}>
+                                    {Number(p.desconto) > 0 ? `${p.desconto}%` : "Não"}
+                                </span>
+                            </TableText>
+
+                            <TableText className="text-center">
+                                <span className={`inline-block px-2 py-1 text-xs rounded-full ${Number(p.estoque) > 10
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-yellow-100 text-yellow-800'
+                                    }`}>
+                                    {p.estoque}
+                                </span>
+                            </TableText>
+
+                            <TableText className="text-center">
+                                <button
+                                    onClick={() => handleOpenModal(p)}
+                                    className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 w-full"
+                                >
+                                    <FaEdit className="text-white text-sm" />
+                                </button>
+                            </TableText>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
