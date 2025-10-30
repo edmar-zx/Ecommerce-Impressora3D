@@ -6,6 +6,7 @@ import Categories from '@/components/Categories';
 
 import HeroSection from '@/components/HeroSection';
 import { AllProductsList } from '@/components/AllProductsList';
+import { FeaturedProductsCarousel } from '@/components/FeaturedProductsCarousel';
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       </Link>
       <Hero />
       <Categories />
+      <FeaturedProductsCarousel />
       <HeroSection />
       <AllProductsList />
     </div>
