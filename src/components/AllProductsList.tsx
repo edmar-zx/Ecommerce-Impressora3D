@@ -6,23 +6,15 @@ import { Produto } from "@/types/product";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 type FilterState = {
-  type: "all" | "sale" | "category" | "color";
-  value?: string; // usado para categoria/cor
+  sale: boolean;
+  category?: string;
+  color?: string;
 };
 
 export function AllProductsList() {
   const [products, setProducts] = useState<Produto[]>([]);
   const [filter, setFilter] = useState<FilterState>({ sale: false });
-
   const [sortOption, setSortOption] = useState<string | null>(null);
-
-
-
-  type FilterState = {
-    sale: boolean;
-    category?: string;
-    color?: string;
-  };
 
   const handleFilterChange = (key: keyof FilterState, value?: string | boolean) => {
     setFilter((prev) => ({
@@ -31,7 +23,6 @@ export function AllProductsList() {
     }));
   };
 
-
   const sortOptions = [
     "Mais recentes",
     "Menor preço",
@@ -39,7 +30,6 @@ export function AllProductsList() {
     "A-Z",
     "Z-A",
   ];
-
 
   // Buscar produtos
   const fetchProdutos = async () => {
@@ -55,9 +45,6 @@ export function AllProductsList() {
   useEffect(() => {
     fetchProdutos();
   }, []);
-
-  // Atualiza filtro
-
 
   // Filtra produtos dinamicamente
   const visibleProducts = useMemo(() => {
@@ -99,11 +86,13 @@ export function AllProductsList() {
   }, [products, filter, sortOption]);
 
   return (
-    <div className="container mx-auto px-6 py-16">
-      <h1 className="text-4xl font-bold">Todos os produtos</h1>
+    <div className="container mx-auto px-4 sm:px-6 py-16 max-w-7xl">
+      <h1 className="text-3xl sm:text-4xl font-bold">Todos os produtos</h1>
 
-      <div className="flex gap-4 mt-10 flex-wrap justify-between">
-        <div className="flex gap-6 items-center justify-center">
+      {/* Filtros e Ordenação */}
+      <div className="flex flex-col lg:flex-row gap-4 mt-10 justify-between items-start lg:items-center">
+        {/* Filtros */}
+        <div className="flex flex-wrap gap-3 items-center">
           <ButtonSelect
             title="Todos"
             onClick={() => setFilter({ sale: false, category: undefined, color: undefined })}
@@ -129,25 +118,31 @@ export function AllProductsList() {
           />
         </div>
 
-
-        <ButtonCategoryDropdown
-          title="Ordenar por"
-          options={sortOptions}
-          onSelect={(option) => setSortOption(option)}
-        />
-
+        {/* Ordenação */}
+        <div className="w-full lg:w-auto">
+          <ButtonCategoryDropdown
+            title="Ordenar por"
+            options={sortOptions}
+            onSelect={(option) => setSortOption(option)}
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-10 gap-x-32 mt-10">
+      {/* Grid de Produtos - CORRIGIDO */}
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10 w-full">
         {visibleProducts.map((p) => (
-          <ItemProduct
-            key={p._id}
-            produto={p}
-            onAddToCart={() => alert(`${p.nome} adicionado ao carrinho!`)}
-          />
+          <div key={p._id} className="w-full flex justify-center">
+            <div className="w-full max-w-[280px]">
+              <ItemProduct
+                produto={p}
+                onAddToCart={() => alert(`${p.nome} adicionado ao carrinho!`)}
+              />
+            </div>
+          </div>
         ))}
       </div>
-      
+
+      {/* Paginação */}
       <div className="flex justify-center items-center gap-2 mt-12">
         <button className="w-10 h-10 flex items-center justify-center font-bold text-white bg-gray-900 rounded-full">
           1
@@ -165,11 +160,3 @@ export function AllProductsList() {
     </div>
   );
 }
-{/*    <div>
-          <button
-            className="flex items-center justify-center  gap-2 w-fit px-5 py-3 border rounded-full border-[#2C2C2C] text-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-white transition-colors font-medium"
-          >
-            Ordenar Por
-            <ChevronDown size={24} />
-          </button>
-        </div> */}

@@ -11,14 +11,14 @@ import { FeaturedProductsCarousel } from '@/components/FeaturedProductsCarousel'
 export default function Home() {
   return (
     <div>
-      <Link href="/admin/DashboardProduct">
-        <h1 className="text-black font-sans text-center text-[24px]">Cadastrar Produtos</h1>
-      </Link>
       <Hero />
       <Categories />
       <FeaturedProductsCarousel />
       <HeroSection />
-      <AllProductsList />
+
+      <section id='allProducts'>
+        <AllProductsList />
+      </section>
     </div>
   );
 }
