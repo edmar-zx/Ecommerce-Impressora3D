@@ -3,7 +3,7 @@ export interface Produto {
     nome: string;
     descricao: string;
     categoria: string;
-    imagem: string | File;  // string para URL, File para upload
+    imagem: string | File;
     material: string;
     cor: string;
     acabamento: string;
@@ -14,5 +14,5 @@ export interface Produto {
     estoque: number;
     tempoEstimadoProducao: string;
     createAt?: string | Date;
-    destaque: Boolean
+    destaque: boolean
 }

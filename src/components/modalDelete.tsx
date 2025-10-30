@@ -35,7 +35,7 @@ export const ModalDelete: React.FC<ModalDeleteProps> = ({
                     {title}
                 </h3>
                 <p className="text-gray-600 mb-6">
-                    {message} <strong>"{produtoNome}"</strong>? 
+                    {message} <strong>{produtoNome}</strong>? 
                     Esta ação não pode ser desfeita.
                 </p>
                 <div className="flex justify-end gap-3">
