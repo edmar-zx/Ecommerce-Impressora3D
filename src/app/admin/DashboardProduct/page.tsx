@@ -4,13 +4,12 @@ import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import { Cards } from "@/components/Cards";
 import { SearchBox } from "@/components/SearchBox";
 import { ModalProduto } from "@/components/ModalProduto";
-
 import { Produto } from "@/types/product";
 import { validateProduct } from "@/utils/productValidation";
 import { TableText } from "@/components/tableText";
 import Image from "next/image";
 import { ModalDelete } from "@/components/modalDelete"
-
+import { Package, Tag, Star, BarChart3 } from "lucide-react";
 
 const getColorHex = (colorName: string): string => {
     const colors: { [key: string]: string } = {
@@ -225,33 +224,60 @@ export default function ProdutoDashboard() {
     const Button = ({ children, onClick, className = "" }: { children: React.ReactNode; onClick?: () => void; className?: string }) => (
         <button
             onClick={onClick}
-            className={`p-3.5 flex items-center gap-2 bg-black border border-black rounded-lg cursor-pointer transition-colors duration-300 hover:bg-white hover:text-black ${className}`}
+            className={`p-3.5 flex items-center gap-2 bg-[#E74C3C] rounded-lg cursor-pointer transition-colors duration-300 hover:bg-[#ff5f57b2] ${className}`}
         >
             {children}
         </button>
     );
 
     const TextButton = ({ children }: { children: React.ReactNode }) => (
-        <span className="text-base font-bold text-white text-center block transition-colors duration-300 group-hover:text-black">
+        <span className="text-base font-bold text-white text-center block transition-colors duration-300 ">
             {children}
         </span>
     );
 
     return (
         <div className="h-screen my-7.5 mx-12.5">
-            <div className="flex justify-between">
-                <Cards emoji="📦" title="Produtos" value={produtos.length} />
-                <Cards emoji="👥" title="Categorias" value={5} />
+            <h1 className="text-6xl font-bold text-transparent stroke-[2px] stroke-black">
+                DESIGN
+            </h1>
+            <div className="flex justify-between gap-6 mb-8">
+                <Cards
+                    icon={Package}
+                    title="Total de Produtos"
+                    value={produtos.length}
+                    color="blue"
+                />
+                <Cards
+                    icon={Tag}
+                    title="Categorias Ativas"
+                    value={5}
+                    color="green"
+                />
+                <Cards
+                    icon={Star}
+                    title="Produtos em Destaque"
+                    value={produtos.filter((p) => p.destaque).length}
+                    color="amber"
+                />
+                <Cards
+                    icon={BarChart3}
+                    title="Taxa de Desconto Média"
+                    value={`${(
+                        produtos.reduce((acc, p) => acc + Number(p.desconto), 0) / produtos.length
+                    ).toFixed(1)}%`}
+                    color="purple"
+                />
             </div>
 
-            <div className="flex justify-between items-center mt-5 flex-wrap gap-2.5 bg-[#f5f5f5] p-5 rounded-xl">
+            <div className="flex justify-between items-center flex-wrap rounded-xl">
                 <SearchBox
                     placeholder="Pesquisar por nome ou ID"
                     value={searchTerm}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 />
                 <Button onClick={() => handleOpenModal()} className="group">
-                    <FaPlus className="text-white transition-colors duration-300 group-hover:text-black" />
+                    <FaPlus className="text-white" />
                     <TextButton>Adicionar Produto</TextButton>
                 </Button>
             </div>
@@ -266,7 +292,7 @@ export default function ProdutoDashboard() {
                         formData={formData}
                         onChange={setFormData}
                         onSubmit={handleSubmit}
-                        
+
                         buttonText={produtoAtual?._id ? "Salvar Alterações" : "Cadastrar Produto"}
                         onClose={handleCloseModal}
                     />
@@ -281,16 +307,16 @@ export default function ProdutoDashboard() {
                 produtoNome={produtoParaDeletar?.nome || ""}
             />
 
-            <div className="mt-5 border-none rounded-lg bg-amber-50">
+            <div className="mt-5 border-none rounded-lg">
                 {/* Cabeçalho da tabela */}
-                <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] font-bold p-5 bg-[#3a5277] rounded-t-xl shadow-sm items-center">
-                    <TableText><strong>Nome</strong></TableText>
-                    <TableText><strong>Categoria</strong></TableText>
-                    <TableText><strong>Preço</strong></TableText>
-                    <TableText><strong>Cor</strong></TableText>
-                    <TableText><strong>Desconto</strong></TableText>
-                    <TableText><strong>Estoque</strong></TableText>
-                    <TableText><strong>Ações</strong></TableText>
+                <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] font-bold p-5 bg-[#27292D] rounded-t-xl shadow-sm items-center">
+                    <TableText className="text-white"><strong>Nome</strong></TableText>
+                    <TableText className="text-white"><strong>Categoria</strong></TableText>
+                    <TableText className="text-white"><strong>Preço</strong></TableText>
+                    <TableText className="text-white"><strong>Cor</strong></TableText>
+                    <TableText className="text-white"><strong>Desconto</strong></TableText>
+                    <TableText className="text-white"><strong>Estoque</strong></TableText>
+                    <TableText className="text-white"><strong>Ações</strong></TableText>
                 </div>
 
                 {/* Corpo da tabela */}
@@ -357,10 +383,10 @@ export default function ProdutoDashboard() {
 
                             <TableText className="text-center">
                                 <span className={`inline-block px-2 py-1 text-xs rounded-full ${Number(p.estoque) === 0
-                                        ? `bg-red-100 text-red-800`
-                                        : Number(p.estoque) > 10
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-yellow-100 text-yellow-800'
+                                    ? `bg-red-100 text-red-800`
+                                    : Number(p.estoque) > 10
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-yellow-100 text-yellow-800'
                                     }`}>
                                     {p.estoque}
                                 </span>

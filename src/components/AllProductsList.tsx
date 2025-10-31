@@ -94,7 +94,7 @@ export function AllProductsList() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-16 max-w-7xl">
+    <div className="container mx-auto px-4 sm:px-6 py-16">
       <h1 className="text-3xl sm:text-4xl font-bold">Todos os produtos</h1>
       {/* Filtros */}
       <div className="flex gap-4 mt-10 flex-wrap justify-between">
@@ -132,7 +132,7 @@ export function AllProductsList() {
       </div>
 
       {/* Lista de produtos paginados */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-10 gap-x-32 mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-10">
         {paginatedProducts.map((p) => (
           <ItemProduct
             key={p._id}

@@ -16,7 +16,7 @@ export function SearchBox({ value, onChange, placeholder }: SearchBoxProps) {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="py-5 px-5 pl-12 bg-white rounded-lg shadow-sm border-none w-full max-w-[500px] box-border"
+        className="py-4 px-4 pl-12 bg-white rounded-lg border border-[#777] w-full max-w-[500px]"
       />
     </form>
   );
