@@ -294,7 +294,7 @@ export default function ProdutoDashboard() {
                 </div>
 
                 {/* Corpo da tabela */}
-                <div className="s">
+                <div className="h-[600px] overflow-auto">
                     {produtosFiltrados.map(p => (
                         <div
                             key={p._id}
