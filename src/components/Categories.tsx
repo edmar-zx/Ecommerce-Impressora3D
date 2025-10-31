@@ -10,7 +10,7 @@ const categories = [
 
 export default function Categories() {
   return (
-    <section className="container mx-auto px-6 py-16">
+    <section className="">
       <h2 className="text-3xl font-bold text-gray-800 mb-10">
         Nossas Categorias
       </h2>
@@ -22,7 +22,6 @@ export default function Categories() {
           >
            
             <div className="w-48 h-48 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden mb-4 transition-transform duration-300 group-hover:scale-105">
-              
               <Image
                 src={category.imageUrl}
                 alt={category.name}

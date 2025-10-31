@@ -68,7 +68,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
         }
     };
 
-    // Função para alternar o destaque
     const toggleDestaque = (valor: boolean) => {
         onChange({ ...formData, destaque: valor });
     };
@@ -90,7 +89,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                     onSubmit={onSubmit}
                     className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
                 >
-                    {/* Nome do Produto */}
                     <div className="flex flex-col items-start w-full col-span-2">
                         <label className="text-sm font-bold text-gray-700 text-left mb-2 flex items-center gap-2">
                             Nome do Produto
@@ -104,7 +102,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         />
                     </div>
 
-                    {/* Upload de Imagem */}
                     <div className="flex flex-col gap-4 col-span-2">
                         <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
                             <FaUpload className="text-gray-600" />
@@ -112,7 +109,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </label>
 
                         <div className="flex flex-col md:flex-row items-center gap-6">
-                            {/* Área de Upload - Só aparece quando NÃO tem imagem */}
                             {!preview && (!formData.imagem || (typeof formData.imagem === 'string' && formData.imagem === '')) && (
                                 <div className="flex-1 w-full">
                                     <Input
@@ -134,7 +130,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                                 </div>
                             )}
 
-                            {/* Preview - Só aparece quando TEM imagem */}
                             {(preview || (formData.imagem && typeof formData.imagem === 'string' && formData.imagem !== '')) && (
                                 <div className="flex flex-col  gap-3  ">
                                     <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-200">
@@ -151,7 +146,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                                             setPreview(null);
                                             onChange({
                                                 ...formData,
-                                                imagem: '' // Limpa a imagem
+                                                imagem: ''
                                             });
                                         }}
                                         className="flex items-center gap-2 px-3 py-1 text-xs text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors"
@@ -164,12 +159,7 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </div>
                     </div>
 
-                    {/* Categoria e Tempo de Produção */}
-
-                    {/* Grid Responsiva para Campos do Produto */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-2">
-
-                        {/* Categoria */}
                         <div className="col-span-full sm:col-span-1">
                             <DropdownField
                                 label="Categoria"
@@ -180,7 +170,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                             />
                         </div>
 
-                        {/* Tempo de Produção */}
                         <div className="col-span-full sm:col-span-1">
                             <DropdownField
                                 label="Tempo de Produção"
@@ -190,7 +179,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                             />
                         </div>
 
-                        {/* Peso */}
                         <div className="col-span-full sm:col-span-1">
                             <div className="flex flex-col items-start w-full">
                                 <label className="text-sm font-bold text-gray-700 text-left mb-2 flex items-center gap-2">
@@ -208,7 +196,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                             </div>
                         </div>
 
-                        {/* Material */}
                         <div className="col-span-full sm:col-span-1">
                             <DropdownField
                                 label="Material"
@@ -218,7 +205,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                             />
                         </div>
 
-                        {/* Cor */}
                         <div className="col-span-full sm:col-span-1">
                             <DropdownField
                                 label="Cor"
@@ -228,7 +214,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                             />
                         </div>
 
-                        {/* Acabamento */}
                         <div className="col-span-full sm:col-span-1">
                             <DropdownField
                                 label="Acabamento"
@@ -240,7 +225,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
 
                     </div>
 
-                    {/* Dimensões */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full col-span-2 bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <div className="flex flex-col items-start w-full">
                             <label className="text-sm font-bold text-gray-700 text-left mb-2 flex items-center gap-2">
@@ -310,7 +294,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </div>
                     </div>
 
-                    {/* Descrição */}
                     <div className="flex flex-col items-start w-full col-span-2">
                         <label className="text-sm font-bold text-gray-700 text-left mb-2">
                             Descrição
@@ -323,7 +306,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         />
                     </div>
 
-                    {/* Produto em Destaque */}
                     <div className="flex flex-col items-start w-full col-span-2">
                         <label className="text-sm font-bold text-gray-700 text-left mb-2 flex items-center gap-2">
                             <FaStar className="text-yellow-500" />
@@ -359,7 +341,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </p>
                     </div>
 
-                    {/* Preço, Desconto e Estoque */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full col-span-2">
                         <div className="flex flex-col items-start w-full">
                             <label className="text-sm font-bold text-gray-700 text-left mb-2">
@@ -435,7 +416,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </div>
                     </div>
 
-                    {/* Campos de ID e Data (se existir) */}
                     {formData._id && (
                         <>
                             <div className="flex flex-col items-start w-full">
@@ -463,7 +443,6 @@ export function ModalProduto({ formData, onChange, onSubmit, onClose }: ModalPro
                         </>
                     )}
 
-                    {/* Botões */}
                     {formData._id ? (
                         <div className="flex flex-col sm:flex-row justify-between gap-4 col-span-2 mt-4">
                             <Button type="submit" variant="primary" className="group">

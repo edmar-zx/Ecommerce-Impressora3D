@@ -36,31 +36,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
     }
 
-    // Gera token JWT 
     const token = jwt.sign({ 
       id: user._id.toString(), 
       email: user.email 
     }, JWT_SECRET, { 
       expiresIn: "1h" 
     });
-
-    // **CORREÇÃO CRÍTICA: Configuração do cookie para Vercel**
-  /*   const requestOrigin = req.headers.get('origin'); */
-    /* const isVercel = requestOrigin?.includes('.vercel.app'); */
     
     const response = NextResponse.json({ 
       message: "Login bem-sucedido",
       user: { id: user._id, email: user.email }
     });
 
-    // **CONFIGURAÇÃO ESPECÍFICA PARA VERCEL**
     response.cookies.set("authToken", token, {
       httpOnly: true,
-      secure: true, // ✅ SEMPRE true na Vercel
-      sameSite: "strict", // ✅ CRÍTICO para cross-domain na Vercel
+      secure: true, 
+      sameSite: "strict",
       maxAge: 60 * 60,
       path: "/",
-      // ⚠️ NÃO defina 'domain' - deixa o browser gerenciar
     });
 
     console.log("✅ Cookie configurado - Secure:", true, "SameSite: none");

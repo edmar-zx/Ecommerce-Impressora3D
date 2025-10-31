@@ -15,8 +15,8 @@ export function AllProductsList() {
   const [products, setProducts] = useState<Produto[]>([]);
   const [filter, setFilter] = useState<FilterState>({ sale: false });
   const [sortOption, setSortOption] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1); // 👈 controle da página
-  const itemsPerPage = 8; // 👈 número de produtos por página
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
 
   const handleFilterChange = (key: keyof FilterState, value?: string | boolean) => {
@@ -24,7 +24,7 @@ export function AllProductsList() {
       ...prev,
       [key]: value,
     }));
-    setCurrentPage(1); // 👈 reseta para a primeira página ao mudar o filtro
+    setCurrentPage(1);
   };
 
   const sortOptions = [
@@ -35,7 +35,6 @@ export function AllProductsList() {
     "Z-A",
   ];
 
-  // Buscar produtos
   const fetchProdutos = async () => {
     try {
       const res = await fetch("/api/produtos");
@@ -50,7 +49,6 @@ export function AllProductsList() {
     fetchProdutos();
   }, []);
 
-  // ---- Filtros e ordenação ----
   const filteredProducts = useMemo(() => {
 
     let result = [...products];
@@ -84,7 +82,6 @@ export function AllProductsList() {
     return result;
   }, [products, filter, sortOption]);
 
-  // ---- Paginador ----
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
@@ -94,9 +91,8 @@ export function AllProductsList() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-16">
+    <div className="">
       <h1 className="text-3xl sm:text-4xl font-bold">Todos os produtos</h1>
-      {/* Filtros */}
       <div className="flex gap-4 mt-10 flex-wrap justify-between">
         <div className="flex gap-6 items-center justify-center">
 
@@ -131,7 +127,6 @@ export function AllProductsList() {
         />
       </div>
 
-      {/* Lista de produtos paginados */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-10">
         {paginatedProducts.map((p) => (
           <ItemProduct
@@ -142,7 +137,6 @@ export function AllProductsList() {
         ))}
       </div>
 
-      {/* Paginação */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-12">
           <button

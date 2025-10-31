@@ -10,7 +10,6 @@ type CardsProps = {
 
 export function Cards({ icon: Icon, title, value}: CardsProps) {
 
-
   return (
     <div className="group p-6 w-[23%] bg-[#27292D] rounded-2xl text-white hover:-translate-y-1 max-h-[200px] min-h-[150px] flex flex-col justify-between">
       <div className="flex items-center justify-between mb-4">

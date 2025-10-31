@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import { Produto } from '@/types/product'
 import { ItemProduct } from './ItemProduct'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-
-// Swiper
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
@@ -57,9 +55,9 @@ export function FeaturedProductsCarousel() {
     }
 
     return (
-        <section className="container mx-auto px-4 sm:px-6 py-16" aria-labelledby="featured-products-title">
+        <section className="" aria-labelledby="featured-products-title">
             <div className="rounded-lg">
-                <h2 id="featured-products-title" className="text-2xl font-bold mb-6">
+                <h2 className="text-3xl font-bold text-gray-800 mb-10">
                     Produtos em Destaque
                 </h2>
 
@@ -96,7 +94,6 @@ export function FeaturedProductsCarousel() {
                         ))}
                     </Swiper>
 
-                    {/* Botões customizados com destaque */}
                     <button
                         className="custom-prev absolute -left-4 lg:-left-6 top-1/2 transform -translate-y-1/2 z-10 bg-gray-200 backdrop-blur-sm shadow-2xl p-3 rounded-full border border-gray-200 hover:bg-white transition-all duration-300 hover:scale-110 hover:shadow-xl active:scale-105 group"
                         aria-label="Produtos anteriores"

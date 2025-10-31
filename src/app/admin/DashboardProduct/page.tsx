@@ -61,7 +61,6 @@ export default function ProdutoDashboard() {
 
     const handleCloseModal = () => setShowModal(false);
 
-    // Funções para o modal de deletar
     const handleOpenDeleteModal = (produto: Produto) => {
         setProdutoParaDeletar(produto);
         setShowDeleteModal(true);
@@ -113,8 +112,6 @@ export default function ProdutoDashboard() {
     const handleCreate = async () => {
         try {
             const form_data = new FormData();
-
-            // Campos de texto/número
             form_data.append("nome", formData.nome);
             form_data.append("descricao", formData.descricao);
             form_data.append("categoria", formData.categoria);
@@ -129,7 +126,6 @@ export default function ProdutoDashboard() {
             form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
             form_data.append("destaque", String(formData.destaque));
 
-            // Campo de imagem
             if (formData.imagem instanceof File) {
                 form_data.append("imagem", formData.imagem);
             }
@@ -158,8 +154,6 @@ export default function ProdutoDashboard() {
 
         try {
             const form_data = new FormData();
-
-            // Campos de texto/número
             form_data.append("nome", formData.nome);
             form_data.append("descricao", formData.descricao);
             form_data.append("categoria", formData.categoria);
@@ -174,12 +168,9 @@ export default function ProdutoDashboard() {
             form_data.append("dimensoes", JSON.stringify(formData.dimensoes));
             form_data.append("destaque", String(formData.destaque));
 
-            // Imagem
             if (formData.imagem instanceof File) {
                 form_data.append("imagem", formData.imagem);
             }
-
-            // Passando o ID como campo separado
             form_data.append("id", produtoAtual._id);
 
             const res = await fetch("/api/produtos", {
@@ -299,7 +290,6 @@ export default function ProdutoDashboard() {
                 </>
             )}
 
-            {/* Modal de confirmação para deletar */}
             <ModalDelete
                 isOpen={showDeleteModal}
                 onClose={handleCloseDeleteModal}
@@ -308,7 +298,6 @@ export default function ProdutoDashboard() {
             />
 
             <div className="mt-5 border-none rounded-lg">
-                {/* Cabeçalho da tabela */}
                 <div className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] font-bold p-5 bg-[#27292D] rounded-t-xl shadow-sm items-center">
                     <TableText className="text-white"><strong>Nome</strong></TableText>
                     <TableText className="text-white"><strong>Categoria</strong></TableText>
@@ -319,14 +308,12 @@ export default function ProdutoDashboard() {
                     <TableText className="text-white"><strong>Ações</strong></TableText>
                 </div>
 
-                {/* Corpo da tabela */}
                 <div className="h-[600px] overflow-auto">
                     {produtosFiltrados.map(p => (
                         <div
                             key={p._id}
                             className="grid grid-cols-[30%_15%_12%_13%_10%_10%_10%] p-3 bg-[#f5f5f5] shadow-sm border items-center min-h-[80px]"
                         >
-                            {/* Coluna Nome com Imagem */}
                             <div className="flex items-center gap-3 min-w-0">
                                 <div className="flex-shrink-0 w-14 h-14 relative">
                                     {p.imagem ? (
@@ -347,7 +334,6 @@ export default function ProdutoDashboard() {
                                 </TableText>
                             </div>
 
-                            {/* Demais colunas */}
                             <TableText className="text-center truncate">
                                 <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full max-w-full truncate">
                                     {p.categoria}

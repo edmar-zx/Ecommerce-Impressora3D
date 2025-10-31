@@ -3,15 +3,13 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="bg-white shadow-sm sticky top-0 z-50 flex flex-col justify-center items-center">
+      <nav className=" py-4 flex justify-between items-center w-[90%]">
         
-        {/* 1. Logo */}
         <Link href="/" className="text-3xl font-bold text-gray-900">
           Impressão 3D
         </Link>
 
-        {/* 2. Barra de Busca */}
         <div className="relative flex-1 max-w-lg mx-8">
           <input
             type="text"
@@ -22,7 +20,6 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* 3. Links de Navegação */}
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium">
             Home
@@ -38,7 +35,6 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* 4. Ícones da Direita */}
         <div className="flex items-center space-x-4 ml-6">
           <button className="text-gray-600 hover:text-gray-900">
             <Heart size={24} />

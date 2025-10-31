@@ -15,8 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     pathname.startsWith("/admin")
 
   return (
-    <html lang="pt-BR">
-      <body className={`${inter.className} bg-gray-50`}>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${inter.className} bg-gray-50`} suppressHydrationWarning>
         {!hideLayout && <Navbar />}
         <main>{children}</main>
         {!hideLayout && <Footer />}

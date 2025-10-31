@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section className="bg-rgba(224, 224, 224, 1)">
-      <div className="container mx-auto px-6">
+      <div className="">
         <div
           className="h-[85vh] rounded-lg  bg-cover bg-center bg-no-repeat relative"
           style={{
@@ -17,7 +17,6 @@ export default function Hero() {
           <div className="relative h-full">
             <div className="pt-15 ml-25">
 
-              {/* Substituindo o texto por SVG */}
               <div className="w-[400px] md:w-[500px]">
                 <Image
                   src="/heroImg.svg"

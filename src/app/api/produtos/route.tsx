@@ -8,12 +8,10 @@ import path from "path";
 
 const uploadDir = path.join(process.cwd(), "public", "uploads");
 
-// Garante que a pasta existe
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Interface para o body do FormData
 interface FormDataBody {
   nome: string;
   descricao: string;
@@ -31,7 +29,6 @@ interface FormDataBody {
   destaque?: string; 
 }
 
-// Função para salvar arquivo
 async function saveFile(file: File): Promise<string> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -45,7 +42,6 @@ async function saveFile(file: File): Promise<string> {
   return `/uploads/${filename}`;
 }
 
-// Função para processar FormData
 async function processFormData(request: NextRequest) {
   const formData = await request.formData();
   const body: Partial<FormDataBody> = {};
@@ -55,7 +51,6 @@ async function processFormData(request: NextRequest) {
     if (value instanceof File) {
       files[key] = value;
     } else {
-      // Type assertion para garantir a tipagem
       body[key as keyof FormDataBody] = value as string;
     }
   }
@@ -63,12 +58,10 @@ async function processFormData(request: NextRequest) {
   return { body, files };
 }
 
-// Função auxiliar para deletar imagem
 function deleteImageFile(imagePath: string): void {
   try {
     if (!imagePath || typeof imagePath !== 'string') return;
-    
-    // Remove o '/' inicial se existir
+
     const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     const fullPath = path.join(process.cwd(), 'public', cleanPath);
     
@@ -98,7 +91,6 @@ export async function POST(req: NextRequest) {
     
     const collection = await getProdutosCollection();
 
-    // Processar imagem
     let imagemPath = "";
     if (files.imagem) {
       imagemPath = await saveFile(files.imagem);
@@ -106,7 +98,6 @@ export async function POST(req: NextRequest) {
 
     const dimensoes = body.dimensoes ? JSON.parse(body.dimensoes) : { largura: 0, altura: 0, profundidade: 0 };
 
-    // Usando a tipagem Produto 
     const produto: Omit<Produto, '_id'> = {
       nome: body.nome || "",
       descricao: body.descricao || "",
@@ -151,7 +142,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Busca o produto atual para obter a imagem antiga
     const produtoAtual = await collection.findOne({ _id: ObjectId.createFromHexString(id) });
     let imagemAntiga: string | null = null;
 
@@ -159,7 +149,7 @@ export async function PUT(req: NextRequest) {
       imagemAntiga = produtoAtual.imagem;
     }
 
-    const updateFields: Partial<Produto> = { /* ANALISAR ESSE || DEPOIS NA EDICAO */
+    const updateFields: Partial<Produto> = {
       nome: body.nome || "",
       descricao: body.descricao || "",
       categoria: body.categoria || "",
@@ -174,16 +164,13 @@ export async function PUT(req: NextRequest) {
       destaque: body.destaque ? body.destaque === 'true' : false,
     };
 
-    // Processar dimensões
     if (body.dimensoes) {
       updateFields.dimensoes = JSON.parse(body.dimensoes);
     }
 
-    // Processar imagem se foi enviada uma nova
     if (files.imagem) {
       updateFields.imagem = await saveFile(files.imagem);
       
-      // Se foi enviada uma nova imagem, deleta a antiga
       if (imagemAntiga) {
         deleteImageFile(imagemAntiga);
       }
@@ -214,7 +201,6 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// DELETE atualizado usando a função auxiliar
 export async function DELETE(req: NextRequest) {
   try {
     const collection = await getProdutosCollection();
@@ -225,21 +211,18 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'ID do produto é obrigatório' }, { status: 400 });
     }
 
-    // Busca o produto para obter o caminho da imagem
     const produto = await collection.findOne({ _id: ObjectId.createFromHexString(id) });
     
     if (!produto) {
       return NextResponse.json({ error: 'Produto não encontrado' }, { status: 404 });
     }
 
-    // Deleta o produto do banco
     const { deletedCount } = await collection.deleteOne({ _id: ObjectId.createFromHexString(id) });
 
     if (deletedCount === 0) {
       return NextResponse.json({ error: 'Produto não encontrado' }, { status: 404 });
     }
 
-    // Deleta a imagem associada
     if (produto.imagem && typeof produto.imagem === 'string') {
       deleteImageFile(produto.imagem);
     }

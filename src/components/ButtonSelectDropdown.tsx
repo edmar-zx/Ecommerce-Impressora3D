@@ -1,4 +1,3 @@
-// src/components/ButtonCategoryDropdown.tsx
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -14,7 +13,6 @@ export function ButtonCategoryDropdown({ title, options, onSelect }: ButtonCateg
   const [selected, setSelected] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fecha o dropdown se clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
