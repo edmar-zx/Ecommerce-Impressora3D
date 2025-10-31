@@ -37,7 +37,7 @@ export default function HeroSection() {
       </div>
       <div className="absolute bottom-12 w-full flex justify-center h-full max-h-[75vh] pointer-events-none">
         <Image
-          src="/impressora.png"
+          src="/impressora3D.png"
           alt="Impressora 3D Creality K1"
           width={700}
           height={700}
