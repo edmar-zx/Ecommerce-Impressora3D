@@ -18,6 +18,7 @@ export function AllProductsList() {
   const [currentPage, setCurrentPage] = useState(1); // 👈 controle da página
   const itemsPerPage = 8; // 👈 número de produtos por página
 
+
   const handleFilterChange = (key: keyof FilterState, value?: string | boolean) => {
     setFilter((prev) => ({
       ...prev,
@@ -51,6 +52,7 @@ export function AllProductsList() {
 
   // ---- Filtros e ordenação ----
   const filteredProducts = useMemo(() => {
+
     let result = [...products];
 
     if (filter.sale) result = result.filter((p) => p.desconto > 0);
@@ -92,12 +94,12 @@ export function AllProductsList() {
   };
 
   return (
-    <div className="container mx-auto px-6 py-16">
-      <h1 className="text-4xl font-bold">Todos os produtos</h1>
-
+    <div className="container mx-auto px-4 sm:px-6 py-16 max-w-7xl">
+      <h1 className="text-3xl sm:text-4xl font-bold">Todos os produtos</h1>
       {/* Filtros */}
       <div className="flex gap-4 mt-10 flex-wrap justify-between">
         <div className="flex gap-6 items-center justify-center">
+
           <ButtonSelect
             title="Todos"
             onClick={() => setFilter({ sale: false, category: undefined, color: undefined })}

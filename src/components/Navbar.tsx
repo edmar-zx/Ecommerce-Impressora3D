@@ -8,7 +8,7 @@ export default function Navbar() {
         
         {/* 1. Logo */}
         <Link href="/" className="text-3xl font-bold text-gray-900">
-          Mumu
+          Impressão 3D
         </Link>
 
         {/* 2. Barra de Busca */}
@@ -27,16 +27,13 @@ export default function Navbar() {
           <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium">
             Home
           </Link>
-          <Link href="/produtos" className="text-gray-600 hover:text-gray-900 font-medium">
+          <Link href="#allProducts" className="text-gray-600 hover:text-gray-900 font-medium">
             Produtos
           </Link>
-          <button className="flex items-center text-gray-600 hover:text-gray-900 font-medium">
-            Categorias <ChevronDown size={16} className="ml-1" />
-          </button>
-          <Link href="/sobre" className="text-gray-600 hover:text-gray-900 font-medium">
+          <Link href="#contact" className="text-gray-600 hover:text-gray-900 font-medium">
             Sobre
           </Link>
-          <Link href="/contato" className="text-gray-600 hover:text-gray-900 font-medium">
+          <Link href="#contact" className="text-gray-600 hover:text-gray-900 font-medium">
             Contato
           </Link>
         </div>

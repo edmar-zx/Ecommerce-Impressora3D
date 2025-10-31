@@ -150,6 +150,7 @@ export function ItemProduct({ produto, onAddToCart, className = '' }: ProductIte
                     <button
                         onClick={onAddToCart}
                         className="w-full bg-[#2C2C2C]  text-white px-6 py-3 rounded-full font-medium hover:bg-[#E74C3C] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+
                         aria-label={`Adicionar ${produto.nome} ao carrinho`}
                         disabled={!emEstoque}
                     >

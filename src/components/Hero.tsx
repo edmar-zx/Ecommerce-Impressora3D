@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -25,18 +25,18 @@ export default function Hero() {
 
         {/* Botões */}
         <div className="flex space-x-4 mt-8">
-          <button className="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors">
-            Explorar Produtos
+          <button className="px-6 hover:cursor-pointer py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors">
+            <Link href="#allProducts">Explorar Produtos</Link>
           </button>
-          <button className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
-            Sobre Nós
+          <button className="px-6 hover:cursor-pointer py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+            <Link href="#contact">Sobre Nós</Link>
           </button>
         </div>
       </div>
 
       {/* Botão "Entre em Contato" (Canto Superior Direito) */}
-      <button className="absolute top-6 right-6 z-10 px-5 py-2 bg-white/90 text-gray-800 font-medium rounded-full backdrop-blur-sm hover:bg-white transition-colors">
-        Entre em Contato
+      <button className="absolute hover:cursor-pointer top-6 right-6 z-10 px-5 py-2 bg-white/90 text-gray-800 font-medium rounded-full backdrop-blur-sm hover:bg-white transition-colors">
+        <Link href="#contact">Entre em Contato</Link>
       </button>
 
     </section>

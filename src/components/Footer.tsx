@@ -2,7 +2,7 @@ import { Mail, MapPin, MessageSquare } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-500 py-20 mt-16">
+    <footer className="bg-gray-500 py-20 mt-16" id='contact'>
       <div className="container mx-auto px-6">
         
        
