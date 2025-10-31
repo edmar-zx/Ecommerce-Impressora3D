@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressContentEditableWarning>
       <body className={`${inter.className} bg-gray-50`}>
         <Navbar />
         <main>

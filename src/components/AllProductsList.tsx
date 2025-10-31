@@ -3,7 +3,7 @@ import { ButtonSelect } from "./ButtonSelect";
 import { ButtonCategoryDropdown } from "./ButtonSelectDropdown";
 import { ItemProduct } from "./ItemProduct";
 import { Produto } from "@/types/product";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 type FilterState = {
   sale: boolean;
@@ -15,12 +15,16 @@ export function AllProductsList() {
   const [products, setProducts] = useState<Produto[]>([]);
   const [filter, setFilter] = useState<FilterState>({ sale: false });
   const [sortOption, setSortOption] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1); // 👈 controle da página
+  const itemsPerPage = 8; // 👈 número de produtos por página
+
 
   const handleFilterChange = (key: keyof FilterState, value?: string | boolean) => {
     setFilter((prev) => ({
       ...prev,
       [key]: value,
     }));
+    setCurrentPage(1); // 👈 reseta para a primeira página ao mudar o filtro
   };
 
   const sortOptions = [
@@ -46,22 +50,15 @@ export function AllProductsList() {
     fetchProdutos();
   }, []);
 
-  // Filtra produtos dinamicamente
-  const visibleProducts = useMemo(() => {
+  // ---- Filtros e ordenação ----
+  const filteredProducts = useMemo(() => {
+
     let result = [...products];
 
-    // ---- Filtros ----
-    if (filter.sale) {
-      result = result.filter((p) => p.desconto > 0);
-    }
-    if (filter.category) {
-      result = result.filter((p) => p.categoria === filter.category);
-    }
-    if (filter.color) {
-      result = result.filter((p) => p.cor === filter.color);
-    }
+    if (filter.sale) result = result.filter((p) => p.desconto > 0);
+    if (filter.category) result = result.filter((p) => p.categoria === filter.category);
+    if (filter.color) result = result.filter((p) => p.cor === filter.color);
 
-    // ---- Ordenação ----
     switch (sortOption) {
       case "Menor preço":
         result.sort((a, b) => a.preco - b.preco);
@@ -77,7 +74,9 @@ export function AllProductsList() {
         break;
       case "Mais recentes":
         result.sort(
-          (a, b) => new Date(b.createAt as string).getTime() - new Date(a.createAt as string).getTime()
+          (a, b) =>
+            new Date(b.createAt as string).getTime() -
+            new Date(a.createAt as string).getTime()
         );
         break;
     }
@@ -85,20 +84,27 @@ export function AllProductsList() {
     return result;
   }, [products, filter, sortOption]);
 
+  // ---- Paginador ----
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 py-16 max-w-7xl">
       <h1 className="text-3xl sm:text-4xl font-bold">Todos os produtos</h1>
+      {/* Filtros */}
+      <div className="flex gap-4 mt-10 flex-wrap justify-between">
+        <div className="flex gap-6 items-center justify-center">
 
-      {/* Filtros e Ordenação */}
-      <div className="flex flex-col lg:flex-row gap-4 mt-10 justify-between items-start lg:items-center">
-        {/* Filtros */}
-        <div className="flex flex-wrap gap-3 items-center">
           <ButtonSelect
             title="Todos"
             onClick={() => setFilter({ sale: false, category: undefined, color: undefined })}
             active={!filter.sale && !filter.category && !filter.color}
           />
-
           <ButtonSelect
             title="Em Promoção"
             onClick={() => handleFilterChange("sale", true)}
@@ -118,45 +124,61 @@ export function AllProductsList() {
           />
         </div>
 
-        {/* Ordenação */}
-        <div className="w-full lg:w-auto">
-          <ButtonCategoryDropdown
-            title="Ordenar por"
-            options={sortOptions}
-            onSelect={(option) => setSortOption(option)}
-          />
-        </div>
+        <ButtonCategoryDropdown
+          title="Ordenar por"
+          options={sortOptions}
+          onSelect={(option) => setSortOption(option)}
+        />
       </div>
 
-      {/* Grid de Produtos - CORRIGIDO */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10 w-full">
-        {visibleProducts.map((p) => (
-          <div key={p._id} className="w-full flex justify-center">
-            <div className="w-full max-w-[280px]">
-              <ItemProduct
-                produto={p}
-                onAddToCart={() => alert(`${p.nome} adicionado ao carrinho!`)}
-              />
-            </div>
-          </div>
+      {/* Lista de produtos paginados */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-10 gap-x-32 mt-10">
+        {paginatedProducts.map((p) => (
+          <ItemProduct
+            key={p._id}
+            produto={p}
+            onAddToCart={() => alert(`${p.nome} adicionado ao carrinho!`)}
+          />
         ))}
       </div>
 
       {/* Paginação */}
-      <div className="flex justify-center items-center gap-2 mt-12">
-        <button className="w-10 h-10 flex items-center justify-center font-bold text-white bg-gray-900 rounded-full">
-          1
-        </button>
-        <button className="w-10 h-10 flex items-center justify-center font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100">
-          2
-        </button>
-        <button className="w-10 h-10 flex items-center justify-center font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100">
-          3
-        </button>
-        <button className="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100">
-          <ChevronRight size={20} />
-        </button>
-      </div>
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-12">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="w-15 h-15 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100 disabled:opacity-50"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => {
+            const page = i + 1;
+            return (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`w-15 h-15 flex items-center justify-center rounded-full border font-medium transition-colors ${
+                  currentPage === page
+                    ? "bg-gray-900 text-white font-bold"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="w-15 h-15 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100 disabled:opacity-50"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

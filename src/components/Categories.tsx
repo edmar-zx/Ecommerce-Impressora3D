@@ -1,11 +1,11 @@
 import Image from 'next/image';
 
 const categories = [
-  { name: "Miniaturas", imageUrl: "/miniaturas_.png" }, 
-  { name: "Utensílios", imageUrl: "/utensils.png" },
-  { name: "Decoração", imageUrl: "/decoration.png" },
-  { name: "Acessórios", imageUrl: "/accessories.png" },
-  { name: "Brinquedos", imageUrl: "/toys.png" },
+  { name: "Miniaturas", imageUrl: "/categoriaMiniaturas.png" }, 
+  { name: "Utensílios", imageUrl: "/categoriaUtensilios.png" },
+  { name: "Decoração", imageUrl: "/categoriaDecoracao.png" },
+  { name: "Acessórios", imageUrl: "/categoriaAcessorios.png" },
+  { name: "Brinquedos", imageUrl: "/categoriaBrinquedos.png" },
 ];
 
 export default function Categories() {
